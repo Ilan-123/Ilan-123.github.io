@@ -230,28 +230,8 @@ a { color: var(--accent); }
 @keyframes viewfade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 /* ═══ Hero ═══════════════════════════════════════ */
-/* The hero keeps its original plasma palette (user: "identical, only the
-   font changes") — scope the old tokens so the site-wide retint skips it. */
-.hero {
-  --bg: #070b14;
-  --ink: #e8edf7;
-  --ink-2: #9aa7bf;
-  --accent: #4fd8eb;
-  --accent-2: #e05fc4;
-  --on-accent: #04121a;
-  --line: rgba(154, 167, 191, 0.18);
-  --glow: 0 0 24px rgba(79, 216, 235, 0.35);
-}
-:root[data-theme="light"] .hero {
-  --bg: #f5f7fb;
-  --ink: #16233a;
-  --ink-2: #51617c;
-  --accent: #155fad;
-  --accent-2: #9c2f8a;
-  --on-accent: #ffffff;
-  --line: rgba(22, 35, 58, 0.14);
-  --glow: 0 4px 18px rgba(21, 95, 173, 0.18);
-}
+/* Hero text uses the site tokens (yellow pencil in dark mode); only the
+   plasma canvas animation keeps its original colors (see plasma.js). */
 .hero {
   position: relative;
   min-height: calc(100vh - 62px);
