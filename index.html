@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Engineering portfolio — mechanical engineering, thermal and electromagnetic systems, energy and fusion.">
+  <title>Ilan Jordan — Energy &amp; Fusion Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;circle cx='50' cy='50' r='12' fill='%234fd8eb'/&gt;&lt;ellipse cx='50' cy='50' rx='44' ry='18' fill='none' stroke='%23e05fc4' stroke-width='6' transform='rotate(30 50 50)'/&gt;&lt;ellipse cx='50' cy='50' rx='44' ry='18' fill='none' stroke='%234fd8eb' stroke-width='6' transform='rotate(-30 50 50)'/&gt;&lt;/svg&gt;">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="nav" id="nav">
+    <a class="brand" href="#home" aria-label="Home">
+      <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="10" class="mark-core"/>
+        <ellipse cx="50" cy="50" rx="42" ry="16" class="mark-orbit a" transform="rotate(30 50 50)"/>
+        <ellipse cx="50" cy="50" rx="42" ry="16" class="mark-orbit b" transform="rotate(-30 50 50)"/>
+      </svg>
+      <span class="brand-name" id="brand-name">Ilan Jordan</span>
+    </a>
+
+    <nav class="nav-tabs" id="nav-tabs" aria-label="Main">
+      <a href="#home" data-route="home">Home</a>
+      <a href="#projects" data-route="projects">Projects</a>
+      <a href="#about" data-route="about">About</a>
+      <a href="#contact" data-route="contact">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle color theme" title="Toggle theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="icon-moon" d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/><g class="icon-sun"><circle cx="12" cy="12" r="4.6"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></g></svg>
+      </button>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ══════════ HOME ══════════ -->
+    <section class="view" id="view-home" data-view="home">
+      <div class="hero">
+        <canvas id="plasma" aria-hidden="true"></canvas>
+        <div class="hero-frame" aria-hidden="true">
+          <span class="hf-corner tl"></span><span class="hf-corner tr"></span>
+          <span class="hf-corner bl"></span><span class="hf-corner br"></span>
+          <span class="hf-label hf-fig">FIG. 01 — CONFINEMENT FIELD, TOROIDAL SECTION</span>
+          <span class="hf-label hf-tele" id="hero-telemetry">FIELD · INIT</span>
+        </div>
+        <div class="hero-inner">
+          <p class="eyebrow" id="hero-eyebrow">MechE &amp; Materials Science · Physics · Duke ’29</p>
+          <h1 class="hero-title" id="hero-title">Ilan Jordan</h1>
+          <p class="hero-tagline" id="hero-tagline">Designing thermal &amp; electromagnetic systems for the energy of the future.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="#projects">View Projects</a>
+            <a class="btn btn-ghost" href="#contact">Get in Touch</a>
+          </div>
+          <p class="hero-specs" id="hero-specs"></p>
+        </div>
+        <a class="scroll-hint" href="#focus" aria-label="Scroll to focus areas">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+      </div>
+      <div class="section" id="focus">
+        <p class="eyebrow">Focus Areas</p>
+        <div class="focus-grid" id="focus-grid"><!-- tiles rendered from config.js --></div>
+      </div>
+    </section>
+
+    <!-- ══════════ PROJECTS ══════════ -->
+    <section class="view" id="view-projects" data-view="projects" hidden>
+      <div class="section">
+        <p class="eyebrow">Portfolio</p>
+        <h1 class="page-title">Projects</h1>
+        <div class="subtabs" id="subtabs" role="tablist" aria-label="Project categories"><!-- pills rendered from config.js --></div>
+        <div class="project-grid" id="project-grid"><!-- cards rendered from projects.js --></div>
+        <p class="empty-note" id="projects-empty" hidden>No projects in this category yet.</p>
+      </div>
+    </section>
+
+    <!-- ══════════ ABOUT ══════════ -->
+    <section class="view" id="view-about" data-view="about" hidden>
+      <div class="section">
+        <p class="eyebrow">Background</p>
+        <h1 class="page-title">About</h1>
+        <div class="about-cols">
+          <div class="about-left">
+            <div class="portrait" id="portrait"><!-- photo or placeholder --></div>
+            <div class="bio" id="bio"><!-- paragraphs from config.js --></div>
+          </div>
+          <div class="about-right">
+            <h2 class="block-title">Skills</h2>
+            <div class="skills" id="skills"></div>
+            <h2 class="block-title">Timeline</h2>
+            <ol class="timeline" id="timeline"></ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ CONTACT ══════════ -->
+    <section class="view" id="view-contact" data-view="contact" hidden>
+      <div class="section contact-section">
+        <p class="eyebrow">Contact</p>
+        <h1 class="page-title" id="contact-heading">Let’s build the future of energy.</h1>
+        <p class="contact-sub" id="contact-sub"></p>
+        <div class="contact-grid" id="contact-grid"></div>
+        <a class="btn btn-primary btn-cv" id="cv-btn" href="assets/docs/cv.pdf" download>Download CV</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span id="footer-id"></span>
+    <span class="footer-note">35.9940° N / 78.8986° W · DURHAM</span>
+    <span class="footer-note">Hand-built · HTML + CSS + JS · no frameworks</span>
+  </footer>
+
+  <!-- Project detail overlay -->
+  <div class="overlay" id="detail" hidden role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <div class="overlay-panel">
+      <button class="overlay-close" id="detail-close" aria-label="Close project">✕</button>
+      <div class="overlay-body" id="detail-body"></div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lb-btn lb-close" id="lb-close" aria-label="Close">✕</button>
+    <button class="lb-btn lb-prev" id="lb-prev" aria-label="Previous image">‹</button>
+    <img id="lb-img" alt="">
+    <button class="lb-btn lb-next" id="lb-next" aria-label="Next image">›</button>
+    <p class="lb-count" id="lb-count"></p>
+  </div>
+
+  <noscript><p style="padding:2rem;text-align:center">This portfolio needs JavaScript enabled to render its content.</p></noscript>
+
+  <script src="js/config.js"></script>
+  <script src="js/projects.js"></script>
+  <script src="js/plasma.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
