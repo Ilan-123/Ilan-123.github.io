@@ -6,6 +6,8 @@ lives in three small files, and the layout is specified in [`PLAN.md`](PLAN.md).
 
 Identity: **Mechanical Engineer · Physics student at Duke University · Energy & Fusion Systems**
 
+🌐 **Live site:** <https://ilan-123.github.io> · Repo: <https://github.com/Ilan-123/Ilan-123.github.io>
+
 ---
 
 ## 1. View the site locally
@@ -90,17 +92,29 @@ Edit `PLAN.md` — it describes every tab, section order, and position with wire
 Change the spec (move a section, add a sub-tab, redesign the hero), then ask Claude:
 *“Apply my edits in PLAN.md to the site.”*
 
-## 7. Publish later (GitHub Pages)
+## 7. Publish changes (GitHub Pages — already live)
+
+The site is live at <https://ilan-123.github.io>, deployed from the `main` branch of
+[`Ilan-123/Ilan-123.github.io`](https://github.com/Ilan-123/Ilan-123.github.io).
+Publishing an update is just a push:
 
 ```bash
 cd ~/Projects/eportfolio
-git init -b main && git add -A && git commit -m "Portfolio site"
-gh repo create <your-username>.github.io --public --source=. --push
+git add -A
+git commit -m "Add coolant loop project"
+git push
 ```
 
-Then on GitHub: **Settings → Pages → Deploy from branch → main**. The site appears at
-`https://<your-username>.github.io`. (Any static host — Netlify, Cloudflare Pages —
-works the same: upload this folder.)
+The site redeploys automatically **1–2 minutes** after each push — refresh the live
+URL to see it. Notes:
+
+- Full workflow for a new project: photos → `assets/images/`, PDFs → `assets/docs/`,
+  entry in `js/projects.js` (see §3), check locally with `./serve.sh`, then push.
+- Authentication goes through the Windows credential manager — pushes just work,
+  no login needed. Commits use the `Ilan-123@users.noreply.github.com` email
+  (already configured in this repo; GitHub rejects pushes exposing the real address).
+- **Don't rename the repo** — the exact name `Ilan-123.github.io` is what serves the
+  site at the root URL.
 
 ---
 
