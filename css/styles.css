@@ -4,69 +4,70 @@
    (the default), then the light "Blueprint" overrides below it.
    ═══════════════════════════════════════════════════════════════ */
 :root {
-  /* ── Dark · Plasma ───────────────────────────── */
-  --bg:        #070b14;   /* page background            */
-  --bg-grid:   transparent;
-  --surface:   #0e1524;   /* cards, panels               */
-  --surface-2: #141d31;   /* hover / raised              */
-  --ink:       #e8edf7;   /* main text                   */
-  --ink-2:     #9aa7bf;   /* secondary text              */
-  --line:      rgba(154, 167, 191, 0.18);  /* borders    */
-  --accent:    #4fd8eb;   /* plasma cyan — primary       */
-  --accent-2:  #e05fc4;   /* magenta — secondary         */
+  /* ── Dark · Sketchbook (navy graph paper + yellow pencil + red pen) ── */
+  --bg:        #0c1626;   /* dark navy graph paper       */
+  --bg-grid:   rgba(247, 211, 84, 0.045);  /* faint yellow grid */
+  --surface:   #121d33;   /* cards, panels               */
+  --surface-2: #182544;   /* hover / raised              */
+  --ink:       #f2ead8;   /* warm paper-white pencil     */
+  --ink-2:     #b0a68c;   /* faded pencil                */
+  --line:      rgba(242, 234, 216, 0.16);  /* borders    */
+  --accent:    #f7d354;   /* yellow pencil — primary     */
+  --accent-2:  #e2604c;   /* red pen — secondary         */
   --hot:       #f0a35e;   /* thermal orange              */
-  --on-accent: #04121a;   /* text on accent buttons      */
-  --glow:      0 0 24px rgba(79, 216, 235, 0.35);
-  --glow-soft: 0 0 60px rgba(79, 216, 235, 0.12);
-  --overlay-bg: rgba(4, 7, 14, 0.78);
-  --hero-fade: rgba(7, 11, 20, 0);
-  --neb-a: rgba(21, 95, 138, 0.55);    /* ambient glow, top-left    */
-  --neb-b: rgba(90, 30, 85, 0.5);      /* ambient glow, bottom-right */
+  --on-accent: #241c05;   /* text on accent buttons      */
+  --glow:      0 0 24px rgba(247, 211, 84, 0.25);
+  --glow-soft: 0 0 60px rgba(247, 211, 84, 0.10);
+  --overlay-bg: rgba(5, 9, 18, 0.8);
+  --hero-fade: rgba(12, 22, 38, 0);
+  --neb-a: rgba(24, 52, 96, 0.5);      /* ambient glow, top-left    */
+  --neb-b: rgba(96, 74, 20, 0.3);      /* ambient glow, bottom-right */
   --nav-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 
   /* ── Type & shape (shared by both themes) ────── */
-  --font-body: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
-  /* display voice: Archivo stretched wide & heavy — industrial, NASA-worm caps */
-  --display-stretch: 125%;
+  --font-body: "Architects Daughter", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  --font-mono: "Architects Daughter", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  --display-stretch: 100%;  /* no-op on the handwriting font, kept for compat */
   --radius: 6px;
+  /* hand-ruled box — slightly different radii each corner */
+  --wonky: 255px 15px 225px 15px / 15px 225px 15px 255px;
   --maxw: 1120px;
 }
 
 :root[data-theme="light"] {
-  /* ── Light · Blueprint ───────────────────────── */
-  --bg:        #f5f7fb;
-  --bg-grid:   rgba(21, 95, 173, 0.07);   /* drafting grid lines */
-  --surface:   #ffffff;
-  --surface-2: #eef2f9;
-  --ink:       #16233a;
-  --ink-2:     #51617c;
-  --line:      rgba(22, 35, 58, 0.14);
-  --accent:    #155fad;   /* engineering blue */
-  --accent-2:  #9c2f8a;
+  /* ── Light · Paper (pencil on off-white, red pen accents) ── */
+  --bg:        #f6f2e8;   /* warm paper */
+  --bg-grid:   rgba(58, 54, 48, 0.06);    /* graphite grid lines */
+  --surface:   #fffdf7;
+  --surface-2: #efe9db;
+  --ink:       #3a3630;   /* graphite */
+  --ink-2:     #7a7264;
+  --line:      rgba(58, 54, 48, 0.20);
+  --accent:    #155fad;   /* engineering-blue pencil */
+  --accent-2:  #c0392b;   /* red pen */
   --hot:       #b4560f;
   --on-accent: #ffffff;
-  --glow:      0 4px 18px rgba(21, 95, 173, 0.18);
+  --glow:      0 4px 18px rgba(21, 95, 173, 0.15);
   --glow-soft: none;
-  --overlay-bg: rgba(22, 35, 58, 0.45);
-  --hero-fade: rgba(245, 247, 251, 0);
-  --neb-a: rgba(126, 168, 214, 0.35);
-  --neb-b: rgba(196, 150, 190, 0.28);
-  --nav-shadow: 0 8px 24px rgba(22, 35, 58, 0.10);
+  --overlay-bg: rgba(58, 54, 48, 0.45);
+  --hero-fade: rgba(246, 242, 232, 0);
+  --neb-a: rgba(200, 188, 160, 0.30);
+  --neb-b: rgba(214, 196, 160, 0.24);
+  --nav-shadow: 0 8px 24px rgba(58, 54, 48, 0.10);
 }
 
 /* First visit before JS stamps a theme: follow the OS. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
-    --bg: #f5f7fb; --bg-grid: rgba(21,95,173,0.07);
-    --surface: #ffffff; --surface-2: #eef2f9;
-    --ink: #16233a; --ink-2: #51617c; --line: rgba(22,35,58,0.14);
-    --accent: #155fad; --accent-2: #9c2f8a; --hot: #b4560f;
+    --bg: #f6f2e8; --bg-grid: rgba(58,54,48,0.06);
+    --surface: #fffdf7; --surface-2: #efe9db;
+    --ink: #3a3630; --ink-2: #7a7264; --line: rgba(58,54,48,0.20);
+    --accent: #155fad; --accent-2: #c0392b; --hot: #b4560f;
     --on-accent: #ffffff;
-    --glow: 0 4px 18px rgba(21,95,173,0.18); --glow-soft: none;
-    --overlay-bg: rgba(22,35,58,0.45); --hero-fade: rgba(245,247,251,0);
-    --neb-a: rgba(126,168,214,0.35); --neb-b: rgba(196,150,190,0.28);
-    --nav-shadow: 0 8px 24px rgba(22,35,58,0.10);
+    --glow: 0 4px 18px rgba(21,95,173,0.15); --glow-soft: none;
+    --overlay-bg: rgba(58,54,48,0.45); --hero-fade: rgba(246,242,232,0);
+    --neb-a: rgba(200,188,160,0.30); --neb-b: rgba(214,196,160,0.24);
+    --nav-shadow: 0 8px 24px rgba(58,54,48,0.10);
   }
 }
 
@@ -117,6 +118,9 @@ a { color: var(--accent); }
   margin: 0 0 .6rem;
 }
 .page-title {
+  text-decoration: underline wavy var(--accent);
+  text-underline-offset: 12px;
+  text-decoration-thickness: 2px;
   font-size: clamp(2.2rem, 5.5vw, 3.4rem);
   font-weight: 850;
   font-stretch: var(--display-stretch);
@@ -226,6 +230,28 @@ a { color: var(--accent); }
 @keyframes viewfade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 /* ═══ Hero ═══════════════════════════════════════ */
+/* The hero keeps its original plasma palette (user: "identical, only the
+   font changes") — scope the old tokens so the site-wide retint skips it. */
+.hero {
+  --bg: #070b14;
+  --ink: #e8edf7;
+  --ink-2: #9aa7bf;
+  --accent: #4fd8eb;
+  --accent-2: #e05fc4;
+  --on-accent: #04121a;
+  --line: rgba(154, 167, 191, 0.18);
+  --glow: 0 0 24px rgba(79, 216, 235, 0.35);
+}
+:root[data-theme="light"] .hero {
+  --bg: #f5f7fb;
+  --ink: #16233a;
+  --ink-2: #51617c;
+  --accent: #155fad;
+  --accent-2: #9c2f8a;
+  --on-accent: #ffffff;
+  --line: rgba(22, 35, 58, 0.14);
+  --glow: 0 4px 18px rgba(21, 95, 173, 0.18);
+}
 .hero {
   position: relative;
   min-height: calc(100vh - 62px);
@@ -313,7 +339,7 @@ a { color: var(--accent); }
 .btn {
   display: inline-block;
   padding: .8rem 1.6rem;
-  border-radius: var(--radius);
+  border-radius: var(--wonky);
   font-family: var(--font-mono);
   font-weight: 600; font-size: .82rem;
   letter-spacing: .1em; text-transform: uppercase;
@@ -346,7 +372,7 @@ a { color: var(--accent); }
   display: block; text-decoration: none;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--wonky);
   padding: 1.4rem 1.2rem 1.2rem;
   color: var(--ink);
   transition: transform .18s, border-color .2s, box-shadow .2s;
@@ -382,7 +408,7 @@ a { color: var(--accent); }
   font-family: var(--font-mono);
   font-size: .8rem; letter-spacing: .05em;
   padding: .42rem 1rem;
-  border-radius: 999px;
+  border-radius: var(--wonky);
   border: 1px solid var(--line);
   background: none; color: var(--ink-2);
   cursor: pointer;
@@ -404,7 +430,7 @@ a { color: var(--accent); }
 .project-card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--wonky);
   overflow: hidden;
   cursor: pointer;
   text-align: left; padding: 0;
@@ -620,7 +646,7 @@ a { color: var(--accent); }
 .contact-card {
   display: flex; flex-direction: column; align-items: center; gap: .5rem;
   padding: 1.5rem 1rem;
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--wonky);
   text-decoration: none; color: var(--ink);
   transition: transform .18s, border-color .2s, box-shadow .2s;
 }
@@ -671,4 +697,89 @@ a { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
   html { scroll-behavior: auto; }
+}
+
+/* ═══ Home scroll story — pinned hand-drawn scenes ═══
+   Markup in index.html (#t-thermal … #t-fea), driver in js/scenes.js.
+   All colors come from the theme tokens so both themes work. */
+.track { height: 300vh; position: relative; }
+.stage {
+  position: sticky; top: 0; height: 100vh;
+  padding-top: 62px;                 /* clear the fixed nav */
+  display: grid; place-items: center; overflow: hidden;
+}
+.scene-grid {
+  display: grid;
+  grid-template-columns: minmax(250px, .9fr) minmax(330px, 1.3fr);
+  gap: clamp(20px, 4vw, 56px); align-items: center;
+  width: min(var(--maxw), calc(100% - 40px)); padding: 0 20px;
+}
+.copy .num {
+  display: inline-block; font-size: .95rem; color: var(--accent-2);
+  border: 2px solid var(--accent-2); border-radius: 50%;
+  width: 34px; height: 34px; line-height: 30px; text-align: center;
+  transform: rotate(-4deg); margin-bottom: .8rem;
+}
+.copy h2 {
+  font-size: clamp(28px, 4vw, 46px); font-weight: 700; line-height: 1.15;
+  margin: 0 0 1.6rem; transform: rotate(-1deg);
+  text-decoration: underline wavy var(--accent);
+  text-underline-offset: 10px; text-decoration-thickness: 2px;
+}
+.chip {
+  display: inline-block; font-size: 1rem; color: var(--accent);
+  border: 2px solid var(--accent); border-radius: var(--wonky);
+  padding: .55rem 1.25rem; text-decoration: none; transform: rotate(.6deg);
+  transition: background .2s, color .2s;
+}
+.chip:hover { background: var(--accent); color: var(--on-accent); }
+.frame {
+  position: relative; margin: 0; padding: 18px 14px 6px;
+  border: 2px solid var(--line); border-radius: var(--wonky);
+  transform: rotate(-.4deg);
+}
+.frame svg { display: block; width: 100%; height: auto; max-height: 64vh; }
+.figcap, .hud {
+  position: absolute; padding: 0 10px; max-width: calc(100% - 48px);
+  background: var(--bg); font-size: .85rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.figcap { top: -14px; left: 24px; color: var(--ink-2); transform: rotate(-1.2deg); }
+.hud { bottom: -12px; right: 24px; color: var(--accent); font-size: .8rem; transform: rotate(.8deg); }
+
+/* sketch linework — SVG presentation classes */
+.sk-st  { stroke: var(--ink); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.sk-stf { stroke: var(--ink); stroke-width: 2; fill: color-mix(in srgb, var(--ink) 6%, transparent); stroke-linecap: round; }
+.sk-pencil { stroke: var(--ink-2); stroke-width: 1.2; fill: none; stroke-linecap: round; }
+.sk-lbl { font-size: 13px; fill: var(--ink-2); }
+.sk-acc-line { stroke: var(--accent); fill: none; }
+.sk-acc-fill { fill: var(--accent); }
+.sk-dim-fill { fill: var(--ink-2); }
+.sk-red-fill { fill: var(--accent-2); }
+.sk-red-line { stroke: var(--accent-2); fill: none; }
+.sk-red-text { fill: var(--accent-2); }
+.sk-rod { stroke: var(--ink); stroke-width: 8; stroke-linecap: round; opacity: .85; }
+.sk-trail { stroke: var(--accent); stroke-width: 3; stroke-linecap: round; opacity: .65; }
+.sk-gap line, .sk-gap path { stroke: var(--ink-2); stroke-width: 1.4; fill: none; }
+.sk-gap.on line, .sk-gap.on path { stroke: var(--accent-2); stroke-width: 2.6; }
+.sk-foil { fill: color-mix(in srgb, var(--accent) 10%, transparent); stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
+.sk-beam { fill: color-mix(in srgb, var(--accent) 7%, transparent); stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
+.flowline { stroke: var(--ink-2); stroke-width: 1.6; fill: none; stroke-linecap: round; }
+.eq text { font-size: 13px; fill: var(--accent); }
+#e-charge.ph0, #e-charge.ph1 { fill: var(--accent); }
+#e-charge.ph2 { fill: var(--accent-2); }
+#e-charge.ph3 { fill: var(--ink-2); }
+#e-phases text { fill: var(--ink-2); }
+#e-phases text.on { fill: var(--accent); font-weight: 700; }
+
+@media (max-width: 760px) {
+  .scene-grid { grid-template-columns: 1fr; gap: 10px; align-content: center; }
+  .copy h2 { font-size: 24px; margin-bottom: .7rem; }
+  .copy .num { width: 28px; height: 28px; line-height: 24px; margin-bottom: .4rem; }
+  .chip { font-size: .9rem; padding: .45rem 1rem; }
+  .frame { padding: 14px 10px 4px; }
+  .frame svg { max-height: 46vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .track { height: auto; min-height: 100vh; }
 }

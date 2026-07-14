@@ -82,9 +82,11 @@ All in `js/config.js`, each section labeled with `EDIT ME` comments:
 ## 5. Change the look
 
 Open `css/styles.css` — the top block (`/* ═══ DESIGN TOKENS — EDIT ME ═══ */`)
-holds every color for **both themes** (dark plasma + light blueprint). Change a hex
-value, refresh, done. The theme toggle is the ◐ button in the nav; the visitor's
-choice is remembered.
+holds every color for **both themes** (dark navy sketchbook + light paper). The whole
+site uses a hand-drawn engineering-notebook style: Architects Daughter handwriting
+font, wonky borders, graph-paper background. Change a hex value, refresh, done. The
+theme toggle is the ◐ button in the nav; the visitor's choice is remembered. (The
+hero keeps its own plasma palette — scoped inside `.hero` in the CSS.)
 
 ## 6. Change the layout
 

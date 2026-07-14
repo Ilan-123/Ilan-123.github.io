@@ -52,6 +52,32 @@ then tell Claude: *"Apply my edits in PLAN.md."* The code will be updated to mat
 │ │       ↑ LIVE telemetry read from the particle field  │
 │ └──────────────────────────▾ scroll hint ──────────────│
 ├────────────────────────────────────────────────────────┤
+│  SCROLL STORY — 4 pinned scenes, one per competence.   │
+│  Each scene sticks to the viewport for ~3 screen-      │
+│  heights while its hand-drawn schematic scrubs with    │
+│  the scroll (Apple product-page style). Left column:   │
+│  red circled number + handwritten title + one button   │
+│  into the matching Projects sub-tab. The governing     │
+│  equations live INSIDE the figure as small margin      │
+│  notes (accent color), never overlapping the drawing.  │
+│                                                        │
+│  ① thermal systems.  → #projects/thermal               │
+│     fig. 2 four-stroke engine: scroll turns the crank; │
+│     valves, charge tint, spark flash, phase list       │
+│  ② electromagnetism. → #projects/em                    │
+│     fig. 3 linear accelerator: particle speeds up,     │
+│     crossed rf gap lights red, v→c readout             │
+│  ③ fluid dynamics.   → #projects/thermal               │
+│     fig. 4 airfoil: streamlines draw in, wake vortex,  │
+│     Re readout                                         │
+│  ④ design & FEA.     → #projects/design                │
+│     fig. 5 cantilever: load grows, beam bends, mesh    │
+│     follows, root-stress tint, F/δ readout             │
+│                                                        │
+│  Each figure sits in a wonky hand-ruled frame with a   │
+│  handwritten fig-caption (top-left) and a live HUD     │
+│  readout (bottom-right). Engine: js/scenes.js.         │
+├────────────────────────────────────────────────────────┤
 │  FOCUS AREAS — 4 tiles in a row (2×2 on tablet, 1-col  │
 │  on phone). Each tile links to a Projects sub-tab.     │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐   │
@@ -142,26 +168,34 @@ Sub-tabs (edit in `js/config.js → projectTabs`):
 Toggle: ◐ button in nav. Default follows the visitor's OS; choice saved in the browser.
 All values live in the token block at the top of `css/styles.css`.
 
-| Token | Dark — "Plasma" (default) | Light — "Blueprint" |
+The whole site is drawn in a **hand-sketched engineering-notebook style**: graph-paper
+background, wobbly hand-ruled borders (`--wonky` radius), wavy underlines on titles,
+handwritten labels. The four scroll-story schematics get a pencil-wobble SVG filter
+(`#rough`, turbulence + displacement).
+
+| Token | Dark — "Sketchbook" (default) | Light — "Paper" |
 |---|---|---|
-| background | `#070b14` deep space navy | `#f5f7fb` + faint drafting grid |
-| surface / cards | `#0e1524` | `#ffffff` |
-| text | `#e8edf7` / secondary `#9aa7bf` | `#16233a` / secondary `#51617c` |
-| primary accent | `#4fd8eb` plasma cyan (glows) | `#155fad` engineering blue |
-| secondary accent | `#e05fc4` magenta | `#9c2f8a` deep magenta |
+| background | `#0c1626` navy graph paper | `#f6f2e8` warm paper + graphite grid |
+| surface / cards | `#121d33` | `#fffdf7` |
+| text | `#f2ead8` / secondary `#b0a68c` | `#3a3630` graphite / `#7a7264` |
+| primary accent | `#f7d354` yellow pencil | `#155fad` engineering-blue pencil |
+| secondary accent | `#e2604c` red pen | `#c0392b` red pen |
 | thermal accent | `#f0a35e` orange | `#b4560f` burnt orange |
 
-Type (Google Fonts): **Archivo** variable — body at normal width; display set
-**wide (125% stretch), heavy (850), uppercase** — industrial "NASA-worm" caps for the
-hero name, page titles, block titles, and featured project titles. **IBM Plex Mono**
-for eyebrows, nav tabs, buttons, tags, dates, telemetry, and technical micro-labels
-(instrument-panel voice). Hero last name + one contact-heading word (config:
-`contactHeadingAccent`) render as **hollow accent-colored outline strokes**.
+**Hero exception:** the hero keeps its original Plasma palette (cyan `#4fd8eb` /
+magenta outline, dark `#070b14` field) in dark mode and the original Blueprint values
+in light mode — scoped inside `.hero` in `css/styles.css`. Only its typeface changed.
+
+Type (Google Fonts): **Architects Daughter** everywhere — a hand-lettered face drawn
+from an architect's handwriting; it replaces both Archivo and IBM Plex Mono (the
+`--font-body` / `--font-mono` tokens both point to it). Hero last name + one
+contact-heading word (config: `contactHeadingAccent`) still render as **hollow
+accent-colored outline strokes**.
 
 ## 4. Relative positions summary (quick edit list)
 
 1. Nav: logo **left** · tabs **right** · theme toggle **far right**
-2. Home: hero (full screen) → focus tiles (below fold)
+2. Home: hero (full screen) → 4 pinned scroll-story scenes → focus tiles
 3. Projects: title → sub-tab pills → card grid (newest first)
 4. About: portrait+bio **left**, skills+timeline **right**
 5. Contact: heading → 3 link cards → CV button
@@ -200,12 +234,17 @@ for eyebrows, nav tabs, buttons, tags, dates, telemetry, and technical micro-lab
 - [x] Scroll-reveal animations on tiles, cards, timeline, contact cards
 - [x] Focus tiles: engineering icons, hover accent sweep, EXPLORE → arrow
 - [x] Nav elevates with shadow on scroll; placeholder covers get grid texture
+- [x] Home scroll story: 4 pinned scenes scrubbed by scroll (js/scenes.js), equations
+      as in-figure margin notes, per-scene HUD readouts, reduced-motion static frames,
+      single-column stack on mobile
+- [x] Hand-drawn sketch language site-wide: Architects Daughter type, wonky borders,
+      wavy title underlines, pencil-wobble filter on story schematics
 
 ## 7. Open items
 
 - [x] LinkedIn URL + resume received → About/Contact filled from resume (2026-07-07)
 - [x] Timpel → real EIT Simulator project card + timeline entry (from LinkedIn, 2026-07-08)
 - [ ] Flesh out placeholder projects: RC airplane · electrical generator · GitHub
-- [ ] GitHub profile URL → `js/config.js`
-- [ ] Portrait photo → `assets/images/portrait.jpg`
+- [x] GitHub profile URL → `js/config.js` (github.com/Ilan-123)
+- [x] Portrait photo → `assets/images/portrait.jpg`
 - [x] CV → `assets/docs/cv.pdf`
