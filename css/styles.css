@@ -682,9 +682,11 @@ a { color: var(--accent); }
 /* ═══ Home scroll story — pinned hand-drawn scenes ═══
    Markup in index.html (#t-thermal … #t-fea), driver in js/scenes.js.
    All colors come from the theme tokens so both themes work. */
-.track { height: 250vh; position: relative; }
-/* next scene slides in over the pinned one — halves the dead travel between scenes */
-.track + .track { margin-top: -50vh; }
+/* 400vh track − 100vh stage = each scene's animation scrubs over exactly 300vh. */
+.track { height: 400vh; position: relative; }
+/* Full-viewport overlap: the next scene slides in entirely while the previous
+   one is still pinned, so no scroll position ever shows uncovered dead space. */
+.track + .track { margin-top: -100vh; }
 .stage {
   position: sticky; top: 0; height: 100vh;
   padding-top: 62px;                 /* clear the fixed nav */
