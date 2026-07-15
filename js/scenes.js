@@ -8,7 +8,7 @@
   "use strict";
 
   var home = document.getElementById("view-home");
-  if (!home || !document.getElementById("t-thermal")) return;
+  if (!home || !document.getElementById("story")) return;
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
@@ -125,23 +125,36 @@
   }
 
   /* ── scroll driver ─────────────────────────────
-     progress = how far the pinned track has been scrolled through. */
+     One pinned stage; global progress P over the whole story maps to a
+     local 0→1 per scene. Scenes crossfade in place — no travel between. */
+  var story = $("story");
   var scenes = [
-    { track: $("t-thermal"), copy: $("copy-thermal"), draw: drawThermal },
-    { track: $("t-em"),      copy: $("copy-em"),      draw: drawEm      },
-    { track: $("t-fluid"),   copy: $("copy-fluid"),   draw: drawFluid   },
-    { track: $("t-fea"),     copy: $("copy-fea"),     draw: drawFea     }
+    { el: $("sc-thermal"), draw: drawThermal },
+    { el: $("sc-em"),      draw: drawEm      },
+    { el: $("sc-fluid"),   draw: drawFluid   },
+    { el: $("sc-fea"),     draw: drawFea     }
   ];
   function frame() {
     if (home.hidden) return;                 /* another tab is active */
+    if (reduced) {                           /* static mid-scene frames */
+      scenes.forEach(function (s) {
+        s.draw(0.62);
+        s.el.style.opacity = 1;
+        s.el.style.visibility = "visible";
+      });
+      return;
+    }
     var vh = window.innerHeight;
-    scenes.forEach(function (s) {
-      var rect = s.track.getBoundingClientRect();
-      var p = reduced ? 0.62 : clamp(-rect.top / (rect.height - vh || 1));
-      s.draw(p);
-      var o = clamp(p * 5);
-      s.copy.style.opacity = 0.15 + 0.85 * o;
-      s.copy.style.transform = "translateY(" + (1 - o) * 22 + "px)";
+    var rect = story.getBoundingClientRect();
+    var P = clamp(-rect.top / (rect.height - vh || 1));
+    var n = scenes.length;
+    scenes.forEach(function (s, i) {
+      var t = P * n - i;                     /* <0 upcoming · 0..1 active · >1 done */
+      /* fade in just before its turn; instantly covered by the next one after */
+      var op = clamp(1 + Math.min(t, 0) * 14) * clamp(1 - Math.max(t - 1, 0) * 14);
+      s.el.style.opacity = op;
+      s.el.style.visibility = op <= 0 ? "hidden" : "visible";
+      if (op > 0) s.draw(clamp(t));
     });
   }
   var ticking = false;

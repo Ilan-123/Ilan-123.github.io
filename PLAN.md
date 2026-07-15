@@ -52,10 +52,11 @@ then tell Claude: *"Apply my edits in PLAN.md."* The code will be updated to mat
 │ │       ↑ LIVE telemetry read from the particle field  │
 │ └──────────────────────────▾ scroll hint ──────────────│
 ├────────────────────────────────────────────────────────┤
-│  SCROLL STORY — 4 pinned scenes, one per competence.   │
-│  Each scene sticks to the viewport for ~3 screen-      │
-│  heights while its hand-drawn schematic scrubs with    │
-│  the scroll (Apple product-page style). Left column:   │
+│  SCROLL STORY — one pinned stage, 4 scenes, one per    │
+│  competence. Each scene owns 2.5 screen-heights of     │
+│  scroll; its hand-drawn schematic scrubs with the      │
+│  scroll and scenes CROSSFADE in place — no dead        │
+│  travel between them (Apple style). Left column:       │
 │  red circled number + handwritten title + one button   │
 │  into the matching Projects sub-tab. The governing     │
 │  equations live INSIDE the figure as small margin      │
