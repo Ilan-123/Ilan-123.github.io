@@ -682,7 +682,7 @@ a { color: var(--accent); }
 /* ═══ Home scroll story — pinned hand-drawn scenes ═══
    Markup in index.html (#t-thermal … #t-fea), driver in js/scenes.js.
    All colors come from the theme tokens so both themes work. */
-.track { height: 300vh; position: relative; }
+.track { height: 150vh; position: relative; }
 .stage {
   position: sticky; top: 0; height: 100vh;
   padding-top: 62px;                 /* clear the fixed nav */
@@ -731,7 +731,7 @@ a { color: var(--accent); }
 .sk-st  { stroke: var(--ink); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .sk-stf { stroke: var(--ink); stroke-width: 2; fill: color-mix(in srgb, var(--ink) 6%, transparent); stroke-linecap: round; }
 .sk-pencil { stroke: var(--ink-2); stroke-width: 1.2; fill: none; stroke-linecap: round; }
-.sk-lbl { font-size: 13px; fill: var(--ink-2); }
+.sk-lbl { font-size: 15px; fill: var(--ink-2); }
 .sk-acc-line { stroke: var(--accent); fill: none; }
 .sk-acc-fill { fill: var(--accent); }
 .sk-dim-fill { fill: var(--ink-2); }
@@ -745,20 +745,20 @@ a { color: var(--accent); }
 .sk-foil { fill: color-mix(in srgb, var(--accent) 10%, transparent); stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
 .sk-beam { fill: color-mix(in srgb, var(--accent) 7%, transparent); stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
 .flowline { stroke: var(--ink-2); stroke-width: 1.6; fill: none; stroke-linecap: round; }
-.eq text { font-size: 13px; fill: var(--accent); }
+.eq text { font-size: 15px; fill: var(--accent); }
 #e-charge.ph0, #e-charge.ph1 { fill: var(--accent); }
 #e-charge.ph2 { fill: var(--accent-2); }
 #e-charge.ph3 { fill: var(--ink-2); }
-#e-phases text { fill: var(--ink-2); }
+#e-phases text { fill: var(--ink-2); font-size: 15px; }
 #e-phases text.on { fill: var(--accent); font-weight: 700; }
 
 @media (max-width: 760px) {
-  .scene-grid { grid-template-columns: 1fr; gap: 10px; align-content: center; }
+  .scene-grid { grid-template-columns: 1fr; gap: 28px; align-content: center; }
   .copy h2 { font-size: 24px; margin-bottom: .7rem; }
   .copy .num { width: 28px; height: 28px; line-height: 24px; margin-bottom: .4rem; }
   .chip { font-size: .9rem; padding: .45rem 1rem; }
-  .frame { padding: 14px 10px 4px; }
-  .frame svg { max-height: 46vh; }
+  .frame { padding: 14px 10px 4px; margin-top: 14px; }  /* clear the figcap overhang */
+  .frame svg { max-height: 42vh; }
 }
 @media (prefers-reduced-motion: reduce) {
   .track { height: auto; min-height: 100vh; }
