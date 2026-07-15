@@ -682,15 +682,20 @@ a { color: var(--accent); }
 /* ═══ Home scroll story — pinned hand-drawn scenes ═══
    Markup in index.html (#t-thermal … #t-fea), driver in js/scenes.js.
    All colors come from the theme tokens so both themes work. */
-/* One pinned stage; the four scenes crossfade in place (no travel between
-   them). 1100vh total = 100vh stage + 4 × 250vh of scrub per scene. */
-.story { position: relative; height: 1100vh; }
+.track { height: 250vh; position: relative; }
+/* next scene slides in over the pinned one — halves the dead travel between scenes */
+.track + .track { margin-top: -50vh; }
 .stage {
   position: sticky; top: 0; height: 100vh;
   padding-top: 62px;                 /* clear the fixed nav */
   display: grid; place-items: center; overflow: hidden;
+  /* opaque graph-paper backdrop so overlapping scenes curtain cleanly */
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--bg-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
-.stage > .scene-grid { grid-area: 1 / 1; }  /* all scenes stacked in one cell */
 .scene-grid {
   display: grid;
   grid-template-columns: minmax(250px, .9fr) minmax(330px, 1.3fr);
@@ -764,7 +769,6 @@ a { color: var(--accent); }
   .frame svg { max-height: 42vh; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .story { height: auto; }
-  .stage { position: static; height: auto; padding: 90px 0 2rem; row-gap: 4rem; }
-  .stage > .scene-grid { grid-area: auto; }   /* static frames, stacked in flow */
+  .track { height: auto; min-height: 100vh; }
+  .track + .track { margin-top: 0; }
 }
