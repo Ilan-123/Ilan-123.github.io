@@ -52,10 +52,12 @@ then tell Claude: *"Apply my edits in PLAN.md."* The code will be updated to mat
 │ │       ↑ LIVE telemetry read from the particle field  │
 │ └──────────────────────────▾ scroll hint ──────────────│
 ├────────────────────────────────────────────────────────┤
-│  SCROLL STORY — 4 pinned scenes, one per competence.   │
-│  Each scene sticks to the viewport for ~3 screen-      │
-│  heights while its hand-drawn schematic scrubs with    │
-│  the scroll (Apple product-page style). Left column:   │
+│  SCROLL STORY — 4 compact cards, one per competence.   │
+│  Each card pins mid-screen (~17vh from top) while its  │
+│  hand-drawn schematic scrubs over ~300vh of scroll,    │
+│  then scrolls away with the next card directly behind  │
+│  it in normal flow — no overlap, no fade, no dead      │
+│  band between scenes. Left column:                     │
 │  red circled number + handwritten title + one button   │
 │  into the matching Projects sub-tab. The governing     │
 │  equations live INSIDE the figure as small margin      │

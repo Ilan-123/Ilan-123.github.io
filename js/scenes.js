@@ -134,36 +134,20 @@
   ];
   scenes.forEach(function (s) {
     s.stage = s.track.querySelector(".stage");
-    s.grid = s.track.querySelector(".scene-grid");
   });
   function frame() {
     if (home.hidden) return;                 /* another tab is active */
-    var vh = window.innerHeight;
     scenes.forEach(function (s) {
+      /* card pins while the track scrolls past: progress 0→1 over
+         (track height − card height) ≈ 300vh of scroll */
       var rect = s.track.getBoundingClientRect();
-      var p = reduced ? 0.62 : clamp(-rect.top / (rect.height - vh || 1));
+      var stickyTop = parseFloat(getComputedStyle(s.stage).top) || 0;
+      var span = rect.height - s.stage.offsetHeight || 1;
+      var p = reduced ? 0.62 : clamp((stickyTop - rect.top) / span);
       s.draw(p);
       var o = clamp(p * 5);
       s.copy.style.opacity = 0.15 + 0.85 * o;
       s.copy.style.transform = "translateY(" + (1 - o) * 22 + "px)";
-
-      /* While a scene slides in over the previous one, its content is pulled
-         toward its leading (top) edge so no blank band crops the old figure;
-         once pinned (top = 0) it eases back to dead center. */
-      if (!reduced) {
-        var top = s.stage.getBoundingClientRect().top;
-        var arrival = top > 0 ? Math.min(top / vh, 1) : 0;
-        if (arrival > 0) {
-          /* hold content at the leading edge the whole slide; only ease back
-             to center in the last 15% — by then the old scene is occluded */
-          var hold = Math.min(arrival / 0.15, 1);
-          var band = Math.max(0,
-            42 + (s.stage.clientHeight - 62 - s.grid.offsetHeight) / 2);
-          s.grid.style.transform = "translateY(" + (-band * hold).toFixed(1) + "px)";
-        } else {
-          s.grid.style.transform = "";
-        }
-      }
     });
   }
   window.__scenesFrame = frame;              /* test hook (see _probe.html) */

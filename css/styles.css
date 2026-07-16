@@ -682,21 +682,13 @@ a { color: var(--accent); }
 /* ═══ Home scroll story — pinned hand-drawn scenes ═══
    Markup in index.html (#t-thermal … #t-fea), driver in js/scenes.js.
    All colors come from the theme tokens so both themes work. */
-/* 400vh track − 100vh stage = each scene's animation scrubs over exactly 300vh. */
-.track { height: 400vh; position: relative; }
-/* Full-viewport overlap: the next scene slides in entirely while the previous
-   one is still pinned, so no scroll position ever shows uncovered dead space. */
-.track + .track { margin-top: -100vh; }
+/* Each scene is a compact card that pins mid-screen while its animation
+   scrubs (~300vh), then scrolls away with the next card directly behind it
+   in normal flow — nothing overlaps anything, no dead band between scenes. */
+.track { height: 370vh; position: relative; }
 .stage {
-  position: sticky; top: 0; height: 100vh;
-  padding-top: 62px;                 /* clear the fixed nav */
-  display: grid; place-items: center; overflow: hidden;
-  /* opaque graph-paper backdrop so overlapping scenes curtain cleanly */
-  background-color: var(--bg);
-  background-image:
-    linear-gradient(var(--bg-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
-  background-size: 32px 32px;
+  position: sticky;
+  top: calc(17vh + 31px);            /* rest just below the nav, near center */
 }
 .scene-grid {
   display: grid;
@@ -769,8 +761,9 @@ a { color: var(--accent); }
   .chip { font-size: .9rem; padding: .45rem 1rem; }
   .frame { padding: 14px 10px 4px; margin-top: 14px; }  /* clear the figcap overhang */
   .frame svg { max-height: 42vh; }
+  .stage { top: calc(4vh + 62px); }  /* stacked card is taller on phones */
 }
 @media (prefers-reduced-motion: reduce) {
-  .track { height: auto; min-height: 100vh; }
-  .track + .track { margin-top: 0; }
+  .track { height: auto; padding: 3rem 0; }
+  .stage { position: static; }
 }
