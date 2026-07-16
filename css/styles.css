@@ -685,7 +685,7 @@ a { color: var(--accent); }
 /* Each scene is a compact card that pins mid-screen while its animation
    scrubs (~300vh), then scrolls away with the next card directly behind it
    in normal flow — nothing overlaps anything, no dead band between scenes. */
-.track { height: 370vh; position: relative; }
+.track { height: 270vh; position: relative; }  /* card (~70vh) + ~200vh of scrub */
 .stage {
   position: sticky;
   top: calc(17vh + 31px);            /* rest just below the nav, near center */
@@ -695,6 +695,7 @@ a { color: var(--accent); }
   grid-template-columns: minmax(250px, .9fr) minmax(330px, 1.3fr);
   gap: clamp(20px, 4vw, 56px); align-items: center;
   width: min(var(--maxw), calc(100% - 40px)); padding: 0 20px;
+  margin: 0 auto;                    /* center the card horizontally */
 }
 .copy .num {
   display: inline-block; font-size: .95rem; color: var(--accent-2);
