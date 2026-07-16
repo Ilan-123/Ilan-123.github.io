@@ -132,6 +132,10 @@
     { track: $("t-fluid"),   copy: $("copy-fluid"),   draw: drawFluid   },
     { track: $("t-fea"),     copy: $("copy-fea"),     draw: drawFea     }
   ];
+  scenes.forEach(function (s) {
+    s.stage = s.track.querySelector(".stage");
+    s.grid = s.track.querySelector(".scene-grid");
+  });
   function frame() {
     if (home.hidden) return;                 /* another tab is active */
     var vh = window.innerHeight;
@@ -142,8 +146,27 @@
       var o = clamp(p * 5);
       s.copy.style.opacity = 0.15 + 0.85 * o;
       s.copy.style.transform = "translateY(" + (1 - o) * 22 + "px)";
+
+      /* While a scene slides in over the previous one, its content is pulled
+         toward its leading (top) edge so no blank band crops the old figure;
+         once pinned (top = 0) it eases back to dead center. */
+      if (!reduced) {
+        var top = s.stage.getBoundingClientRect().top;
+        var arrival = top > 0 ? Math.min(top / vh, 1) : 0;
+        if (arrival > 0) {
+          /* hold content at the leading edge the whole slide; only ease back
+             to center in the last 15% — by then the old scene is occluded */
+          var hold = Math.min(arrival / 0.15, 1);
+          var band = Math.max(0,
+            42 + (s.stage.clientHeight - 62 - s.grid.offsetHeight) / 2);
+          s.grid.style.transform = "translateY(" + (-band * hold).toFixed(1) + "px)";
+        } else {
+          s.grid.style.transform = "";
+        }
+      }
     });
   }
+  window.__scenesFrame = frame;              /* test hook (see _probe.html) */
   var ticking = false;
   window.addEventListener("scroll", function () {
     if (!ticking) {
