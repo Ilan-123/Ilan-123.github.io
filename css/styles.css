@@ -686,6 +686,7 @@ a { color: var(--accent); }
    scrubs (~300vh), then scrolls away with the next card directly behind it
    in normal flow — nothing overlaps anything, no dead band between scenes. */
 .track { height: 270vh; position: relative; }  /* card (~70vh) + ~200vh of scrub */
+.track + .track { margin-top: 18vh; }          /* wiggle room between the cards */
 .stage {
   position: sticky;
   top: calc(17vh + 31px);            /* rest just below the nav, near center */
