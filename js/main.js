@@ -148,9 +148,12 @@
     }).join("");
   }
 
+  /* images entries are either "path.jpg" or { src, caption } */
+  function imgSrc(x) { return x.src || x; }
+
   function coverHtml(p) {
     if (p.images && p.images.length) {
-      return '<div class="card-cover"><img src="' + esc(p.images[0]) +
+      return '<div class="card-cover"><img src="' + esc(imgSrc(p.images[0])) +
         '" alt="" loading="lazy"></div>';
     }
     return '<div class="card-cover placeholder ' + coverClass(p.id) +
@@ -199,7 +202,8 @@
     for (var i = 0; i < PROJECTS.length; i++) if (PROJECTS[i].id === id) p = PROJECTS[i];
     if (!p) return;
 
-    galleryImages = (p.images || []).slice();
+    var images = p.images || [];
+    galleryImages = images.map(imgSrc);
     var html =
       '<p class="detail-meta">' + esc(p.date) + " · " + esc(tabLabel(p.tab)) + "</p>" +
       '<h2 id="detail-title">' + esc(p.title) + "</h2>" +
@@ -208,12 +212,37 @@
         return "<p>" + esc(para) + "</p>";
       }).join("") + "</div>";
 
-    if (galleryImages.length) {
-      html += '<p class="detail-h">Gallery</p><div class="gallery">' +
-        galleryImages.map(function (src, idx) {
-          return '<button data-lightbox="' + idx + '" aria-label="Enlarge image ' +
-            (idx + 1) + '"><img src="' + esc(src) + '" alt="" loading="lazy"></button>';
+    (p.sections || []).forEach(function (s) {
+      html += '<p class="detail-h">' + esc(s.heading) + "</p>" +
+        '<div class="detail-desc">' + (s.body || []).map(function (para) {
+          return "<p>" + esc(para) + "</p>";
         }).join("") + "</div>";
+      if (s.items && s.items.length) {
+        html += '<ul class="detail-list">' + s.items.map(function (it) {
+          return "<li>" + esc(it) + "</li>";
+        }).join("") + "</ul>";
+      }
+    });
+
+    if (images.length) {
+      html += '<p class="detail-h">Gallery</p><div class="gallery">' +
+        images.map(function (im, idx) {
+          return '<figure><button data-lightbox="' + idx + '" aria-label="Enlarge image ' +
+            (idx + 1) + '"><img src="' + esc(imgSrc(im)) + '" alt="' + esc(im.caption || "") +
+            '" loading="lazy"></button>' +
+            (im.caption ? "<figcaption>" + esc(im.caption) + "</figcaption>" : "") +
+            "</figure>";
+        }).join("") + "</div>";
+    }
+    if (p.video && p.video.length) {
+      html += '<p class="detail-h">Video</p>' +
+        p.video.map(function (v) {
+          return '<figure class="detail-video"><video controls muted playsinline ' +
+            'preload="metadata"' + (v.poster ? ' poster="' + esc(v.poster) + '"' : "") +
+            '><source src="' + esc(v.file) + '" type="video/mp4"></video>' +
+            (v.caption ? "<figcaption>" + esc(v.caption) + "</figcaption>" : "") +
+            "</figure>";
+        }).join("");
     }
     if (p.docs && p.docs.length) {
       html += '<p class="detail-h">Documentation</p><ul class="doc-list">' +
@@ -236,6 +265,7 @@
     $("detail-close").focus();
   }
   function closeDetail() {
+    $("detail-body").innerHTML = "";   /* stops any playing video */
     detail.hidden = true;
     document.body.style.overflow = "";
   }

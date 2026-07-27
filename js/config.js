@@ -44,7 +44,7 @@ var SITE = {
   // ── About: bio paragraphs ───────────────────────────────────
   aboutParagraphs: [
     "I'm Ilan Jordan — a Mechanical Engineering & Materials Science and Physics student at Duke University (Class of 2029), originally from São Paulo, Brazil. I want to build the machines that make clean energy abundant, and fusion is the problem I keep coming back to: it sits exactly where my interests meet — thermal systems, electromagnetics, and the fluid dynamics that tie them together.",
-    "At Duke, I'm on the liquid propulsion team of Duke AERO, developing CAD models and Ansys fluid simulations to optimize an experimental rocket engine's combustion and cooling as the team pushes toward 50,000 feet, and I work on photosensitive-detector data in the Duke Physics Neutrino Lab. Off campus, I'm a Development Specialist at Timpel Medical, where I engineered a real-time Electrical Impedance Tomography simulator in Python.",
+    "At Duke, I'm on the liquid propulsion team of Duke AERO, developing CAD models and Ansys fluid simulations to optimize an experimental rocket engine's combustion and cooling as the team pushes toward 50,000 feet, and I work on photosensitive-detector data in the Duke Physics Neutrino Lab. Off campus, I'm a Development Specialist at Timpel Medical, where I led development of EITSIM Studio — a real-time simulator that reproduces a ventilated ICU patient in software to drive and verify Electrical Impedance Tomography devices, replacing live-animal testing in the verification loop.",
     "Outside of class, I build things for the joy of it — an RC airplane, an electrical generator, and whatever comes next — and I teach: I've taught Python to students in Paraisópolis and led review sessions for hundreds of physics and calculus students.",
   ],
 
@@ -52,7 +52,7 @@ var SITE = {
   skills: [
     { group: "CAD",        items: ["SolidWorks", "Onshape", "NX"] },
     { group: "Simulation", items: ["Ansys Fluent", "CFD"] },
-    { group: "Programming",items: ["Python", "PySide6", "PyQtGraph", "JavaScript", "Java", "HTML/CSS", "Git"] },
+    { group: "Programming",items: ["Python", "PySide6 / Qt6", "PyQtGraph", "C++", "pybind11", "JavaScript", "Java", "HTML/CSS", "Git"] },
     { group: "AI Tools",   items: ["Claude Code", "Google Gemini"] },
     { group: "Languages",  items: ["Portuguese", "English", "Spanish", "German (basic)"] },
   ],
@@ -60,7 +60,7 @@ var SITE = {
   // ── About: timeline (newest first) ──────────────────────────
   timeline: [
     { period: "May 2026 — present", title: "Development Specialist I", org: "Timpel Medical",
-      blurb: "Built a full-featured Electrical Impedance Tomography (EIT) simulator UI end-to-end in Python (PySide6, PyQtGraph) — a high-fidelity respiratory-function simulation tool used in clinical research, diagnostics, and teaching." },
+      blurb: "Led development of EITSIM Studio, a real-time Electrical Impedance Tomography simulator that reproduces a ventilated ICU patient in software — Python (PySide6, PyQtGraph) over a C++ physics engine, with hardware-in-the-loop control from a real ICU ventilator and an emulated acquisition module that drives a live clinical monitor without a physical phantom." },
     { period: "Mar 2026 — present", title: "Research Assistant, Neutrino Lab", org: "Duke Physics",
       blurb: "Working with field specialists on photosensitive-detector data for cosmic particles." },
     { period: "Jan 2026 — present", title: "Calculus 2 Teaching Assistant", org: "Duke University",
