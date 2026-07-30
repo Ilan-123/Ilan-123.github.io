@@ -4,7 +4,7 @@
    (the default), then the light "Blueprint" overrides below it.
    ═══════════════════════════════════════════════════════════════ */
 :root {
-  /* ── Dark · Sketchbook (navy graph paper + yellow pencil + red pen) ── */
+  /* ── Dark · Sketchbook (navy graph paper + yellow pencil + white pen) ── */
   --bg:        #0c1626;   /* dark navy graph paper       */
   --bg-grid:   rgba(247, 211, 84, 0.045);  /* faint yellow grid */
   --surface:   #121d33;   /* cards, panels               */
@@ -13,7 +13,8 @@
   --ink-2:     #b0a68c;   /* faded pencil                */
   --line:      rgba(242, 234, 216, 0.16);  /* borders    */
   --accent:    #f7d354;   /* yellow pencil — primary     */
-  --accent-2:  #e2604c;   /* red pen — secondary         */
+  --accent-2:  #ffffff;   /* white pen — secondary UI    */
+  --sketch-red: #e2604c;  /* red pen — hero animations only, red in both themes */
   --hot:       #f0a35e;   /* thermal orange              */
   --on-accent: #241c05;   /* text on accent buttons      */
   --glow:      0 0 24px rgba(247, 211, 84, 0.25);
@@ -44,7 +45,8 @@
   --ink-2:     #7a7264;
   --line:      rgba(58, 54, 48, 0.20);
   --accent:    #155fad;   /* engineering-blue pencil */
-  --accent-2:  #c0392b;   /* red pen */
+  --accent-2:  #000000;   /* black pen — secondary UI */
+  --sketch-red: #c0392b;  /* red pen — hero animations only */
   --hot:       #b4560f;
   --on-accent: #ffffff;
   --glow:      0 4px 18px rgba(21, 95, 173, 0.15);
@@ -62,7 +64,7 @@
     --bg: #f6f2e8; --bg-grid: rgba(58,54,48,0.06);
     --surface: #fffdf7; --surface-2: #efe9db;
     --ink: #3a3630; --ink-2: #7a7264; --line: rgba(58,54,48,0.20);
-    --accent: #155fad; --accent-2: #c0392b; --hot: #b4560f;
+    --accent: #155fad; --accent-2: #000000; --sketch-red: #c0392b; --hot: #b4560f;
     --on-accent: #ffffff;
     --glow: 0 4px 18px rgba(21,95,173,0.15); --glow-soft: none;
     --overlay-bg: rgba(58,54,48,0.45); --hero-fade: rgba(246,242,232,0);
@@ -274,6 +276,8 @@ a { color: var(--accent); }
   max-width: var(--maxw); width: 100%;
   margin: 0 auto; padding: 0 24px;
 }
+/* the discipline line sits right, like a plate label; the rest stays left */
+.hero-inner .eyebrow { text-align: right; }
 .hero-title {
   font-size: clamp(3rem, 11vw, 7.5rem);
   font-weight: 850;
@@ -754,19 +758,19 @@ figcaption {
 .sk-acc-line { stroke: var(--accent); fill: none; }
 .sk-acc-fill { fill: var(--accent); }
 .sk-dim-fill { fill: var(--ink-2); }
-.sk-red-fill { fill: var(--accent-2); }
-.sk-red-line { stroke: var(--accent-2); fill: none; }
-.sk-red-text { fill: var(--accent-2); }
+.sk-red-fill { fill: var(--sketch-red); }
+.sk-red-line { stroke: var(--sketch-red); fill: none; }
+.sk-red-text { fill: var(--sketch-red); }
 .sk-rod { stroke: var(--ink); stroke-width: 8; stroke-linecap: round; opacity: .85; }
 .sk-trail { stroke: var(--accent); stroke-width: 3; stroke-linecap: round; opacity: .65; }
 .sk-gap line, .sk-gap path { stroke: var(--ink-2); stroke-width: 1.4; fill: none; }
-.sk-gap.on line, .sk-gap.on path { stroke: var(--accent-2); stroke-width: 2.6; }
+.sk-gap.on line, .sk-gap.on path { stroke: var(--sketch-red); stroke-width: 2.6; }
 .sk-foil { fill: color-mix(in srgb, var(--accent) 10%, transparent); stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
 .sk-beam { fill: color-mix(in srgb, var(--accent) 7%, transparent); stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
 .flowline { stroke: var(--ink-2); stroke-width: 1.6; fill: none; stroke-linecap: round; }
 .eq text { font-size: 15px; fill: var(--accent); }
 #e-charge.ph0, #e-charge.ph1 { fill: var(--accent); }
-#e-charge.ph2 { fill: var(--accent-2); }
+#e-charge.ph2 { fill: var(--sketch-red); }
 #e-charge.ph3 { fill: var(--ink-2); }
 #e-phases text { fill: var(--ink-2); font-size: 15px; }
 #e-phases text.on { fill: var(--accent); font-weight: 700; }
