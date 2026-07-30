@@ -17,7 +17,7 @@
               [{ heading, body: [paragraphs], items: [bullets] }]
      images   photos in assets/images/ — first one is the card cover.
               Each entry is either "assets/images/x.jpg" or
-              { src: "...", caption: "..." }. Leave [] for a gradient cover.
+              { src: "...", caption: "..."}. Leave [] for a gradient cover.
      video    (optional) [{ file, poster, caption }] — mp4 in assets/video/
      docs     files in assets/docs/ shown as download links (or [])
      links    external URLs, e.g. GitHub or a video (or [])
@@ -76,49 +76,50 @@ var PROJECTS = [
     tab: "code",
     featured: true,   // full-width row, cover on the right (alternates)
     title: "EITSIM Studio — Real-Time EIT Patient Simulator",
-    date: "2026 — present",
+    date: "May 2026 — August 2026",
     summary: "A desktop simulator that reproduces a ventilated ICU patient in real time, so EIT monitors can be tested without a patient.",
     description: [
-      "Electrical Impedance Tomography is a radiation-free way of imaging the lungs at the bedside. A belt of electrodes around the chest injects tiny, harmless currents and measures the voltages that come back; because air and tissue conduct electricity differently, those voltages become a live picture of air moving in and out of each region of the lungs.",
-      "Timpel Medical builds the ICU monitors that do this. They let a clinician see which parts of a lung are actually inflating, breath by breath, and set the ventilator so it does not injure the parts that are not.",
-      "Testing those monitors is the hard part: you need a patient whose lungs behave in a known, repeatable way. EITSIM Studio is that patient, in software. It models the breathing mechanics and blood flow of a ventilated ICU patient in real time and feeds the result straight into the monitor, so a device can be exercised against known ground truth — no patient, and no physical stand-in.",
-      "I led its development end-to-end at Timpel, building out essentially the whole current application on top of an initial Python scaffold started by an earlier colleague. Because it reproduces ICU lung conditions in software, it removes live-animal (porcine) studies from the device-verification loop, along with their ethical cost.",
+      "Electrical Impedance Tomography images the lungs at the bedside without radiation. A belt of electrodes around the chest injects tiny, harmless currents and measures the voltages that return; because air and tissue conduct differently, those voltages become a live picture of air moving through each region of the lungs.",
+      "Timpel Medical builds the ICU monitors that do this — they show a clinician which parts of a lung are actually inflating, breath by breath, so the ventilator can be set not to injure the parts that are not.",
+      "Testing those monitors needs a patient whose lungs behave in a known, repeatable way. EITSIM Studio is that patient, in software: it models the breathing mechanics and blood flow of a ventilated ICU patient in real time and feeds the result straight into the monitor, so a device can be exercised against known ground truth.",
+      "I led development end-to-end at Timpel, building essentially the whole current application on top of an initial C++ physics engine. Because it reproduces ICU lung conditions in software, it takes live-animal (porcine) studies out of the device-verification loop, along with their ethical cost.",
     ],
     sections: [
       {
         heading: "Rebuilding the tool",
         body: [
-          "The simulator already existed as a legacy C++ desktop tool: correct physics, but a wall of tabs and bare plots (figs. 2, 4). I kept the validated numerical core and replaced everything above it with a Python application that reads like the bedside monitors clinicians already use (figs. 3, 5) — live waveform scopes, a permanent panel of respiratory numbers, and seven views spanning ventilation, per-region behaviour (figs. 6, 7), clinical maneuvers (fig. 10) and hardware setup.",
+          "The simulator already existed as a legacy C++ tool: correct physics behind a wall of tabs and bare plots (figs. 2, 4). I kept the validated numerical core and replaced everything above it with a Python application that reads like the bedside monitors clinicians already use (figs. 3, 5) — live waveform scopes, a permanent panel of respiratory numbers, and seven views spanning ventilation, per-region behaviour (figs. 6, 7), clinical maneuvers (fig. 10) and hardware setup (fig. 8).",
+          "It also gained what the legacy tool had no path to: every hardware link that follows, and the instrumentation a bench session runs on — freeze-and-crosshair cursors that snap to the nearest stored sample across all eight scopes at once, a severity-tagged event log fed by edge-detected state changes, a 50 Hz CSV recorder keyed to C6 breath numbers for cross-device alignment, and an app-wide manual mode that swaps Qt’s tooltips for a hover overlay covering every control.",
         ],
       },
       {
         heading: "How it works",
         body: [
-          "A C++ engine solves the lung and circulation equations a hundred times a second; a Python interface built with Qt draws the result. The interesting engineering is in the seam between them — the physics runs on its own thread and must never be blocked by the screen, while the screen must never show a torn or stuttering trace.",
+          "A C++ engine solves the lung and circulation equations a hundred times a second; a Python interface built with Qt draws the result. The engineering is in the seam — the physics runs on its own thread and must never be blocked by the screen, while the screen must never show a torn or stuttering trace.",
         ],
         items: [
-          "The engine hands the interface samples in small batches and immediately gets back to solving; nothing in the drawing path can stall it.",
-          "Samples are buffered at full rate but redrawn far less often, so the display stays smooth without ever discarding data.",
-          "Everything crossing between threads is published as a simple immutable snapshot rather than shared, mutable state — the cheapest way to keep a real-time system honest.",
+          "The engine hands over samples in small batches and returns immediately to solving; nothing in the drawing path can stall it.",
+          "Samples are buffered at full rate but redrawn far less often — smooth display, no discarded data.",
+          "State crossing threads is published as an immutable snapshot rather than shared and mutable, the cheapest way to keep a real-time system honest.",
         ],
       },
       {
         heading: "Talking to real hardware",
         body: [
-          "Four device connections run out of the application (fig. 8). Three carry the simulated patient outward to EIT hardware. The fourth runs inward, and is the one I like most: a real Hamilton C6 ICU ventilator, breathing into a mechanical test lung on the bench (video 2), streams its live pressure and flow into the simulator and takes over from the software ventilator (fig. 9, video 3). The modelled lung then responds to a real machine, and the interface locks out its own controls to make the handover obvious.",
-          "That meant implementing the ventilator's serial protocol from its specification, and dealing with the ways real benches differ from ideal ones — wiring, unreliable adapters, a status flag that cannot be trusted. Link quality is watched continuously, and a run that drops too many packets is marked invalid rather than quietly believed.",
+          "Four device connections run out of the application (fig. 8): three carry the simulated patient outward to EIT hardware, and the fourth runs inward — the one I like most. A real Hamilton C6 ICU ventilator, breathing into a mechanical test lung on the bench (video 2), streams live pressure and flow into the simulator and takes over from the software ventilator (fig. 9, video 3). The modelled lung then responds to a real machine, and the interface locks out its own controls to make the handover obvious.",
+          "That meant implementing the ventilator’s serial protocol from its specification, and handling the ways real benches differ from ideal ones: wiring, unreliable adapters, a status flag that cannot be trusted. Link quality is watched continuously, and a run that drops too many packets is marked invalid rather than quietly believed.",
         ],
       },
       {
         heading: "Driving a real monitor",
         body: [
-          "The headline capability. The simulator impersonates the acquisition hardware inside an EIT system, so a real, unmodified clinical monitor performs its own image reconstruction and displays live regional lung imagery generated entirely from simulated physics (fig. 1, video 1) — no patient, no physical phantom.",
-          "This rests on applied linear algebra: a sensitivity matrix relates changes in lung conductivity to the voltages the monitor expects to see. I reduced it from the many thousands of elements of a finite-element model down to four anatomical lung regions — small enough to evaluate every frame, detailed enough that the monitor still draws a genuinely regional image rather than a uniform pulse. On the bench, a real monitor passed its full start-up sequence and imaged the simulated lung.",
+          "The headline capability. The simulator impersonates the acquisition hardware inside an EIT system, so a real, unmodified clinical monitor runs its own image reconstruction and displays live regional lung imagery generated entirely from simulated physics (fig. 1, video 1) — no patient, no physical phantom.",
+          "This rests on applied linear algebra: a sensitivity matrix relates changes in lung conductivity to the voltages the monitor expects. I reduced it from the many thousands of elements of a finite-element model to four anatomical lung regions — small enough to evaluate every frame, detailed enough that the monitor still draws a genuinely regional image rather than a uniform pulse. On the bench, a real monitor passed its full start-up sequence and imaged the simulated lung.",
         ],
       },
     ],
     tags: ["Python", "PySide6 / Qt6", "PyQtGraph", "C++", "pybind11", "Real-Time Systems",
-           "Multithreading", "Applied Linear Algebra", "Numerical Methods", "Serial & TCP/IP"],
+           "Multithreading", "Applied Linear Algebra", "Serial & TCP/IP"],
     images: [
       { src: "assets/images/eitsim-enlight-pim.jpg",
         caption: "Fig. 1 — A real, unmodified Enlight 2100 EIT monitor rendering a live regional ventilation map. The “patient” is the simulator." },
