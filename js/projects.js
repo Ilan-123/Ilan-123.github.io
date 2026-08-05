@@ -154,7 +154,7 @@ var PROJECTS = [
         caption: "Video 3 — Setting modes and pressures on the real ventilator; the simulated lung follows them live." },
     ],
     docs: [
-      { name: "EITSIM Studio — Technical Overview (43 pp, abridged)",
+      { name: "EITSIM Studio — Technical Overview (41 pp, abridged)",
         file: "assets/docs/eitsim-studio-technical-overview.pdf" },
     ],
     links: [],
