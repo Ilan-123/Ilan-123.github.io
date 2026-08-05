@@ -236,6 +236,52 @@ the build rather than emitting a forbidden pattern. Regenerate with that script 
 than hand-editing the PDF. Photos and video need a human eye — text scanning can't see
 a face in a screen reflection or a serial number on an asset tag.
 
+#### Rebuilding the Technical Overview PDF
+
+The PDF is generated, never hand-edited. Its source is the internal design document
+(`.docx`) in the private engineering repo, and the generator stays over there with it:
+it reads that file by absolute path, and its redaction rules spell out the very values
+they strip, so **the generator must never be committed to this repo** — `.gitignore`
+added later would not remove it from history.
+
+Neither `python-docx` nor `reportlab` is installed system-wide here, so build in a venv:
+
+```bash
+python3 -m venv --system-site-packages /tmp/pdfbuild
+/tmp/pdfbuild/bin/pip install python-docx reportlab
+cd ~/work/pyEITSIM_Studio
+/tmp/pdfbuild/bin/python tools/build_public_overview.py /tmp/overview.pdf
+```
+
+What the build does, in order:
+
+1. **Drops whole sections** by heading (`DROP`) — wire protocols, transport
+   credentials, internal document references, patient-derived scenarios, internal
+   verification findings — taking their figures with them.
+2. **Drops or swaps individual figures**, matched on caption text rather than number
+   (`DROP_FIGURES`, `REPLACE_FIGURES`). The phantom-bench schematic is drawn in-script
+   by `phantom_bench()`, so neither a third-party figure nor a photo of the lab is
+   reproduced.
+3. **Rewrites specific sentences** (`REWRITE`) where a term is withheld but the
+   surrounding prose still has to read properly.
+4. **Scrubs residual patterns** (`SCRUB`) from all surviving text and tables.
+5. **Renumbers figure and table captions** 1..N in emission order (`renumber()`),
+   since dropping content leaves gaps in the source numbering. This is only safe while
+   the document has no in-text cross-references — if you add any, check first:
+   `pdftotext out.pdf - | grep -nE '\b(see |in )?(Figure|Table) [0-9]+' `.
+6. **Re-opens the finished PDF and re-scans it**, failing the build rather than
+   shipping a forbidden pattern. A good run ends with `gate passed`.
+
+Then install and wire it up:
+
+```bash
+cp /tmp/overview.pdf assets/docs/eitsim-studio-technical-overview.pdf
+```
+
+and update the page count in that project's `docs:` entry in `js/projects.js` (§3) if
+it changed. Remember the gate only reads *text* — screenshots and photos still need a
+human eye before this goes public.
+
 ---
 
 ## ⚠ Reminders (content still needed from Ilan)
