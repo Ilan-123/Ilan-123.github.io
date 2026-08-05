@@ -230,57 +230,60 @@ For Timpel material specifically, keep out of anything committed: internal docum
 codes, device wire protocols (opcodes, frame layouts, port schemes), transport
 credentials or key identities, lab IP addresses, patient-derived scenario data, device
 serial numbers, and internal verification findings. The Technical Overview PDF in
-`assets/docs/` is an abridged build with all of that removed; its generator lives at
-`pyEITSIM_Studio/tools/build_public_overview.py` and re-scans its own output, failing
-the build rather than emitting a forbidden pattern. Regenerate with that script rather
-than hand-editing the PDF. Photos and video need a human eye — text scanning can't see
-a face in a screen reflection or a serial number on an asset tag.
+`assets/docs/` is an abridged build with all of that already removed. Photos and video
+need a human eye — text scanning can't see a face in a screen reflection or a serial
+number on an asset tag.
 
-#### Rebuilding the Technical Overview PDF
+#### How the abridged PDF was produced
 
-The PDF is generated, never hand-edited. Its source is the internal design document
-(`.docx`) in the private engineering repo, and the generator stays over there with it:
-it reads that file by absolute path, and its redaction rules spell out the very values
-they strip, so **the generator must never be committed to this repo** — `.gitignore`
-added later would not remove it from history.
+The Technical Overview shipped here was built by a script that read the original
+internal document and emitted a redacted copy. That script and its source document
+stayed behind on the employer's systems and are deliberately not in this repo — a
+redaction ruleset names the exact values it strips, so publishing it would undo the
+redaction. What follows is the method, so the same thing can be rebuilt from scratch
+against a different source if this ever needs redoing.
 
-Neither `python-docx` nor `reportlab` is installed system-wide here, so build in a venv:
+**Generate, never hand-edit.** Hand-deleting from a PDF leaves the text in the file's
+object streams. Parse the source document and emit a new PDF containing only what
+survived, so the redaction is repeatable, reviewable as a diff, and can't leave
+remnants.
 
-```bash
-python3 -m venv --system-site-packages /tmp/pdfbuild
-/tmp/pdfbuild/bin/pip install python-docx reportlab
-cd ~/work/pyEITSIM_Studio
-/tmp/pdfbuild/bin/python tools/build_public_overview.py /tmp/overview.pdf
-```
+**Cut whole sections, not sentences.** Removal is keyed on headings, taking everything
+down to the next heading of the same or higher level, figures included. Half-redacted
+prose leaks by implication — a sentence explaining why a value matters tells you most
+of what the value was.
 
-What the build does, in order:
+**Then scrub what survives, by pattern.** Whole-section cuts miss passing mentions, so
+every surviving paragraph and table cell is run through a pattern list: document codes,
+credential and key identities, addresses, magic constants, vendor references.
 
-1. **Drops whole sections** by heading (`DROP`) — wire protocols, transport
-   credentials, internal document references, patient-derived scenarios, internal
-   verification findings — taking their figures with them.
-2. **Drops or swaps individual figures**, matched on caption text rather than number
-   (`DROP_FIGURES`, `REPLACE_FIGURES`). The phantom-bench schematic is drawn in-script
-   by `phantom_bench()`, so neither a third-party figure nor a photo of the lab is
-   reproduced.
-3. **Rewrites specific sentences** (`REWRITE`) where a term is withheld but the
-   surrounding prose still has to read properly.
-4. **Scrubs residual patterns** (`SCRUB`) from all surviving text and tables.
-5. **Renumbers figure and table captions** 1..N in emission order (`renumber()`),
-   since dropping content leaves gaps in the source numbering. This is only safe while
-   the document has no in-text cross-references — if you add any, check first:
-   `pdftotext out.pdf - | grep -nE '\b(see |in )?(Figure|Table) [0-9]+' `.
-6. **Re-opens the finished PDF and re-scans it**, failing the build rather than
-   shipping a forbidden pattern. A good run ends with `gate passed`.
+**Rewrite rather than blank.** Where a withheld term sits inside a sentence that still
+has to read, the sentence is rewritten to a broader, publishable claim instead of being
+gapped or deleted. Blanks advertise their own contents.
 
-Then install and wire it up:
+**Match figures by caption text, not number.** Numbers shift the moment anything is
+dropped, and stale numbers silently target the wrong image. Text matching survives
+edits to the source.
 
-```bash
-cp /tmp/overview.pdf assets/docs/eitsim-studio-technical-overview.pdf
-```
+**Renumber captions after cutting.** Dropping content leaves gaps in the source
+numbering, so figures and tables are renumbered 1..N in emission order. Only safe while
+the document carries no in-text "see Figure N" cross-references — verify before relying
+on it: `pdftotext out.pdf - | grep -nE '(see|in) (Figure|Table) [0-9]+'`.
 
-and update the page count in that project's `docs:` entry in `js/projects.js` (§3) if
-it changed. Remember the gate only reads *text* — screenshots and photos still need a
-human eye before this goes public.
+**Don't reproduce third-party figures.** A citation credits an author; it does not
+license a reproduction. Where a published figure would have illustrated the point, an
+original schematic is drawn instead and the paper cited as the source of the approach.
+Photographs of real facilities get the same treatment — a drawing shows the setup
+without the room, the whiteboards, or the asset tags.
+
+**Verify the output, not the input, and fail closed.** The finished PDF is reopened and
+its rendered text re-scanned for every forbidden pattern. A hit aborts the build rather
+than writing the file. Checking the input only proves what you intended to remove;
+checking the output proves what actually shipped.
+
+**Text scanning cannot clear images.** Every screenshot and photograph still needs a
+human eye. No pattern list sees a face reflected in a monitor, a serial number on an
+asset tag, or a patient identifier inside a screenshot.
 
 ---
 
