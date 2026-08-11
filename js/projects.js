@@ -119,7 +119,7 @@ var PROJECTS = [
       },
     ],
     tags: ["Python", "PySide6 / Qt6", "PyQtGraph", "C++", "pybind11", "Real-Time Systems",
-           "Multithreading", "Applied Linear Algebra", "Serial & TCP/IP"],
+           "Multithreading", "Applied Linear Algebra", "Serial & TCP/IP", "Integrated Systems"],
     images: [
       { src: "assets/images/eitsim-enlight-pim.jpg",
         caption: "Fig. 1 — A real, unmodified Enlight 2100 EIT monitor rendering a live regional ventilation map. The “patient” is the simulator." },
