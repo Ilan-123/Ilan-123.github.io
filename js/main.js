@@ -102,6 +102,7 @@
     coil: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h2"/><path d="M4 12a3 3 0 1 1 5.3 1.9A3 3 0 1 1 14.6 14 3 3 0 1 1 20 12"/><path d="M20 12h2"/></svg>',
     flow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11M3 12h15M3 17h11"/><path d="M18 12l-3-3M18 12l-3 3"/></svg>',
     cube: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M5 7l7 4 7-4M12 11v10"/></svg>',
+    code: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/><path d="M13 4l-2 16"/></svg>',
   };
   $("focus-grid").innerHTML = SITE.focusAreas.map(function (f, i) {
     return '<a class="focus-tile" href="#projects/' + esc(f.tab) + '">' +
@@ -175,6 +176,8 @@
         cls += " featured" + (featIdx % 2 ? " alt" : "");
         featIdx++;
       }
+      var tape = p.id === "timpel-eit-simulator" ? "" :
+        '<span class="card-tape" aria-hidden="true">Under Construction</span>';
       return '<button class="' + cls + '" data-project="' + esc(p.id) + '">' +
         coverHtml(p) +
         '<div class="card-body">' +
@@ -182,7 +185,7 @@
         "<h3>" + esc(p.title) + "</h3>" +
         "<p>" + esc(p.summary) + "</p>" +
         tagsHtml(p.tags) +
-        "</div></button>";
+        "</div>" + tape + "</button>";
     }).join("");
   }
   $("project-grid").addEventListener("click", function (e) {

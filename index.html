@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Engineering portfolio — mechanical engineering, thermal and electromagnetic systems, energy and fusion.">
-  <title>Ilan Jordan — Energy &amp; Fusion Engineering</title>
+  <title>Ilan Jordan — Engineering</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=11">
-  <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;circle cx='50' cy='50' r='12' fill='%234fd8eb'/&gt;&lt;ellipse cx='50' cy='50' rx='44' ry='18' fill='none' stroke='%23e05fc4' stroke-width='6' transform='rotate(30 50 50)'/&gt;&lt;ellipse cx='50' cy='50' rx='44' ry='18' fill='none' stroke='%234fd8eb' stroke-width='6' transform='rotate(-30 50 50)'/&gt;&lt;/svg&gt;">
+  <link rel="stylesheet" href="css/styles.css?v=12">
+  <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;circle cx='50' cy='50' r='12' fill='%234fd8eb'/&gt;&lt;ellipse cx='50' cy='50' rx='44' ry='18' fill='none' stroke='%23ffd23f' stroke-width='6' transform='rotate(30 50 50)'/&gt;&lt;ellipse cx='50' cy='50' rx='44' ry='18' fill='none' stroke='%234fd8eb' stroke-width='6' transform='rotate(-30 50 50)'/&gt;&lt;/svg&gt;">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -258,6 +258,52 @@
         </div>
       </section>
 
+      <section class="track" id="t-code">
+        <div class="stage">
+          <div class="scene-grid">
+            <div class="copy" id="copy-code">
+              <span class="num">5</span>
+              <h2>integrated systems.</h2>
+              <a class="chip" href="#projects/code">→ software</a>
+            </div>
+            <figure class="frame">
+              <span class="figcap">fig. 6 — real-time signal pipeline</span>
+              <span class="hud" id="hud-code">n 0 · 100 Hz</span>
+              <svg viewBox="0 0 420 320" role="img" aria-label="Hand-drawn software engine feeding a live real-time scope, traced as you scroll">
+                <g filter="url(#rough)">
+                  <!-- layered engine stack (software layers / threads) -->
+                  <rect x="42" y="130" width="72" height="44" rx="4" class="sk-st" opacity=".5"/>
+                  <rect x="33" y="139" width="72" height="44" rx="4" class="sk-st" opacity=".75"/>
+                  <rect x="24" y="148" width="72" height="44" rx="4" class="sk-stf"/>
+                  <line x1="24" y1="162" x2="96" y2="162" class="sk-st" opacity=".4"/>
+                  <line x1="24" y1="176" x2="96" y2="176" class="sk-st" opacity=".4"/>
+                  <!-- feed into the scope -->
+                  <path d="M 98 170 Q 128 168 150 156" class="sk-pencil"/>
+                  <path d="M 142 150 L 152 156 L 142 162" class="sk-pencil" fill="none"/>
+                  <!-- scope frame + grid -->
+                  <rect x="150" y="66" width="252" height="172" rx="6" class="sk-st"/>
+                  <line x1="150" y1="152" x2="402" y2="152" class="sk-pencil" opacity=".35" stroke-dasharray="2 6"/>
+                  <line x1="234" y1="70" x2="234" y2="234" class="sk-pencil" opacity=".25" stroke-dasharray="2 6"/>
+                  <line x1="318" y1="70" x2="318" y2="234" class="sk-pencil" opacity=".25" stroke-dasharray="2 6"/>
+                  <!-- live trace, leading dot, sweep cursor (drawn by scenes.js) -->
+                  <path id="c-trace" d="" class="sk-acc-line" stroke-width="2.5" stroke-linejoin="round"/>
+                  <line id="c-sweep" x1="162" y1="72" x2="162" y2="232" class="sk-red-line" stroke-width="1.5" opacity=".7"/>
+                  <circle id="c-dot" cx="162" cy="152" r="4" class="sk-acc-fill"/>
+                  <path d="M 118 250 Q 120 220 112 196" class="sk-pencil" opacity=".7"/>
+                </g>
+                <text x="276" y="52" class="sk-lbl" text-anchor="middle">real-time scope — scroll to sweep</text>
+                <text x="60" y="210" class="sk-lbl" text-anchor="middle">100 Hz engine</text>
+                <g class="eq" transform="rotate(-1 16 268)">
+                  <text x="16" y="268">xₙ = x(n·Δt)</text>
+                  <text x="16" y="290">Δt = 1 / f<tspan dy="4" font-size="10">s</tspan></text>
+                  <text x="16" y="312">f<tspan dy="4" font-size="10">s</tspan><tspan dy="-4"> = 100 Hz</tspan></text>
+                </g>
+              </svg>
+            </figure>
+          </div>
+        </div>
+      </section>
+
       <div class="section" id="focus">
         <p class="eyebrow">Focus Areas</p>
         <div class="focus-grid" id="focus-grid"><!-- tiles rendered from config.js --></div>
@@ -333,10 +379,10 @@
 
   <noscript><p style="padding:2rem;text-align:center">This portfolio needs JavaScript enabled to render its content.</p></noscript>
 
-  <script src="js/config.js?v=11"></script>
-  <script src="js/projects.js?v=11"></script>
-  <script src="js/plasma.js?v=11"></script>
-  <script src="js/scenes.js?v=11"></script>
-  <script src="js/main.js?v=11"></script>
+  <script src="js/config.js?v=12"></script>
+  <script src="js/projects.js?v=12"></script>
+  <script src="js/plasma.js?v=12"></script>
+  <script src="js/scenes.js?v=12"></script>
+  <script src="js/main.js?v=12"></script>
 </body>
 </html>

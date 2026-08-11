@@ -13,7 +13,6 @@ var SITE = {
   // ── Hero: telemetry spec strip (mono readout under the buttons) ─
   heroSpecs: [
     "BASED · DURHAM, NC",
-    "FOCUS · FUSION & ENERGY SYSTEMS",
     "STATUS · OPEN TO OPPORTUNITIES",
   ],
 
@@ -39,6 +38,7 @@ var SITE = {
     { title: "Electromagnetics", blurb: "Generators, coils, and confinement-field design.",       tab: "em",      icon: "coil" },
     { title: "Fluid Dynamics",   blurb: "Ansys CFD, propulsion flows, and aerodynamics.",         tab: "thermal", icon: "flow" },
     { title: "Design & FEA",     blurb: "Onshape/NX CAD, prototyping, manufacturable parts.",     tab: "design",  icon: "cube" },
+    { title: "Integrated Systems", blurb: "Real-time software, controls, and hardware-in-the-loop.", tab: "code",  icon: "code" },
   ],
 
   // ── About: bio paragraphs ───────────────────────────────────

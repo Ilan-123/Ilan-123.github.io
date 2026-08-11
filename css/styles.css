@@ -156,6 +156,7 @@ a { color: var(--accent); }
 .focus-grid .reveal:nth-child(2), .project-grid .reveal:nth-child(2) { transition-delay: .07s; }
 .focus-grid .reveal:nth-child(3), .project-grid .reveal:nth-child(3) { transition-delay: .14s; }
 .focus-grid .reveal:nth-child(4), .project-grid .reveal:nth-child(4) { transition-delay: .21s; }
+.focus-grid .reveal:nth-child(5), .project-grid .reveal:nth-child(5) { transition-delay: .28s; }
 
 /* ═══ Nav ════════════════════════════════════════ */
 .nav {
@@ -348,7 +349,7 @@ a { color: var(--accent); }
 /* ═══ Focus tiles ════════════════════════════════ */
 .focus-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
 }
 .focus-tile {
@@ -412,6 +413,7 @@ a { color: var(--accent); }
   gap: 1.2rem;
 }
 .project-card {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--wonky);
@@ -420,6 +422,19 @@ a { color: var(--accent); }
   text-align: left; padding: 0;
   color: var(--ink); font: inherit;
   transition: transform .18s, border-color .2s, box-shadow .25s;
+}
+/* black-and-yellow hazard tape over unfinished projects (js/main.js) */
+.card-tape {
+  position: absolute; left: -12%; right: -12%; top: 50%;
+  transform: translateY(-50%) rotate(-9deg);
+  z-index: 4; pointer-events: none;
+  padding: .5rem 0;
+  background: #141414; color: #ffd23f;
+  font-weight: 800; font-size: .82rem; letter-spacing: .22em;
+  text-transform: uppercase; text-align: center;
+  border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+  border-image: repeating-linear-gradient(45deg, #000 0 9px, #ffd23f 9px 18px) 5;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .45);
 }
 .project-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--glow-soft), var(--glow); }
 .card-cover { aspect-ratio: 16 / 9; overflow: hidden; position: relative; }
@@ -704,7 +719,7 @@ figcaption {
 /* Each scene is a compact card that pins mid-screen while its animation
    scrubs (~300vh), then scrolls away with the next card directly behind it
    in normal flow — nothing overlaps anything, no dead band between scenes. */
-.track { height: 270vh; position: relative; }  /* card (~70vh) + ~200vh of scrub */
+.track { height: 230vh; position: relative; }  /* card (~70vh) + ~160vh of scrub */
 .track + .track { margin-top: 18vh; }          /* wiggle room between the cards */
 .stage {
   position: sticky;

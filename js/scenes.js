@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════
    scenes.js — Home scroll story (engine: leave alone)
-   Four pinned scenes scrubbed by scroll: engine, linac, airfoil,
-   cantilever. Geometry lives here; every color comes from CSS
+   Five pinned scenes scrubbed by scroll: engine, linac, airfoil,
+   cantilever, real-time scope. Geometry lives here; every color comes from CSS
    classes so both themes work. Markup is in index.html (#t-*).
    ═══════════════════════════════════════════════════════════════ */
 (function () {
@@ -124,13 +124,34 @@
     $("hud-fea").textContent = "F " + (5 * p).toFixed(1) + " kN · δ " + (18 * p).toFixed(1) + " mm";
   }
 
+  /* ── 5 · real-time scope ───────────────────────
+     A 100 Hz engine feeds a live trace; the sweep cursor and the
+     waveform draw in left→right as the track scrolls. */
+  function drawCode(p) {
+    var SX0 = 162, SX1 = 392, SYM = 152, A = 44, A2 = 15, W = SX1 - SX0, K = 2.4 * 2 * Math.PI;
+    function yAt(x) { var ph = (x - SX0) / W * K; return SYM - A * Math.sin(ph) - A2 * Math.sin(2.7 * ph + 0.6); }
+    var xEnd = SX0 + W * p;
+    var n = Math.max(1, Math.round((xEnd - SX0) / 4)), d = "";
+    for (var i = 0; i <= n; i++) {
+      var x = SX0 + (xEnd - SX0) * (i / n);
+      d += (i ? " L" : "M") + x.toFixed(1) + " " + yAt(x).toFixed(1);
+    }
+    $("c-trace").setAttribute("d", d);
+    $("c-dot").setAttribute("cx", xEnd.toFixed(1));
+    $("c-dot").setAttribute("cy", yAt(xEnd).toFixed(1));
+    $("c-sweep").setAttribute("x1", xEnd.toFixed(1));
+    $("c-sweep").setAttribute("x2", xEnd.toFixed(1));
+    $("hud-code").textContent = "n " + Math.round(p * 200) + " · 100 Hz";
+  }
+
   /* ── scroll driver ─────────────────────────────
      progress = how far the pinned track has been scrolled through. */
   var scenes = [
     { track: $("t-thermal"), copy: $("copy-thermal"), draw: drawThermal },
     { track: $("t-em"),      copy: $("copy-em"),      draw: drawEm      },
     { track: $("t-fluid"),   copy: $("copy-fluid"),   draw: drawFluid   },
-    { track: $("t-fea"),     copy: $("copy-fea"),     draw: drawFea     }
+    { track: $("t-fea"),     copy: $("copy-fea"),     draw: drawFea     },
+    { track: $("t-code"),    copy: $("copy-code"),    draw: drawCode    }
   ];
   scenes.forEach(function (s) {
     s.stage = s.track.querySelector(".stage");
