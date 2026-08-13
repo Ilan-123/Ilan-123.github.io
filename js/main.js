@@ -156,13 +156,17 @@
   /* images entries are either "path.jpg" or { src, caption } */
   function imgSrc(x) { return x.src || x; }
 
+  /* the tape lives INSIDE the cover, so a long title or an extra row of tags
+     can't push it down onto the text */
   function coverHtml(p) {
+    var tape = p.wip ?
+      '<span class="card-tape" aria-hidden="true">Under Construction</span>' : "";
     if (p.cover || (p.images && p.images.length)) {
       return '<div class="card-cover"><img src="' + esc(p.cover || imgSrc(p.images[0])) +
-        '" alt="" loading="lazy"></div>';
+        '" alt="" loading="lazy">' + tape + "</div>";
     }
     return '<div class="card-cover placeholder ' + coverClass(p.id) +
-      '"><span>' + esc(initials(p.title)) + "</span></div>";
+      '"><span>' + esc(initials(p.title)) + "</span>" + tape + "</div>";
   }
 
   function renderProjects() {
@@ -180,8 +184,6 @@
         cls += " featured" + (featIdx % 2 ? " alt" : "");
         featIdx++;
       }
-      var tape = p.wip ?
-        '<span class="card-tape" aria-hidden="true">Under Construction</span>' : "";
       return '<button class="' + cls + '" data-project="' + esc(p.id) + '">' +
         coverHtml(p) +
         '<div class="card-body">' +
@@ -189,7 +191,7 @@
         "<h3>" + esc(p.title) + "</h3>" +
         "<p>" + esc(p.summary) + "</p>" +
         tagsHtml(p.tags) +
-        "</div>" + tape + "</button>";
+        "</div></button>";
     }).join("");
   }
   $("project-grid").addEventListener("click", function (e) {

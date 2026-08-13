@@ -48,6 +48,23 @@ var PROJECTS = [
   },
 
   {
+    id: "egr101-paintbrush",
+    tab: "design",
+    wip: true,
+    title: "Automatic Paintbrush Cleaner",
+    date: "2025",
+    summary: "PLACEHOLDER — EGR 101 team design project at Duke Pratt: a machine that cleans paintbrushes on its own.",
+    description: [
+      "PLACEHOLDER — Ilan will fill this in. Worth covering: who the client was and what problem they actually had, the concepts the team considered and why this one won, the mechanism (agitation, water flow, drying?), what you were responsible for as Chief Engineer, how the prototype performed, and what you would change.",
+      "From the resume so far: as Chief Engineer of a first-year EGR 101 design team at the Duke Pratt School of Engineering, Ilan led the team from research through to a functioning prototype.",
+    ],
+    tags: ["Design", "CAD", "Prototyping", "Mechanisms", "Team Leadership"],
+    images: [],
+    docs: [],
+    links: [],
+  },
+
+  {
     id: "rc-airplane",
     tab: "design",
     wip: true,
