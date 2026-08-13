@@ -363,8 +363,9 @@ asset tag, or a patient identifier inside a screenshot.
       Technical Overview PDF.
 - [x] Add your **GitHub URL** to `js/config.js` (`github:`).
 - [x] Portrait photo → `assets/images/portrait.jpg`.
-- [ ] Resize `assets/images/portrait.jpg` — it's **6.8 MB**, several times the weight
-      of everything else on the site combined. The one-line ffmpeg recipe in §3.4 brings
-      it well under 300 KB.
+- [x] Resize `assets/images/portrait.jpg` — was 6.8 MB, now 57 KB. Cropped to the
+      centred 4:5 band `.portrait` actually shows (`object-fit: cover` was discarding
+      the rest) and scaled to 900 × 1125, still 2× its largest render size. The
+      full-frame original is in git history at `111194b` if another crop is ever wanted.
 - [ ] Review the Duke AERO project entry (drafted from the resume) and add photos.
 - [x] Repo is public and Pages is serving at <https://ilan-123.github.io>.
