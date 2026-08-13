@@ -6,8 +6,12 @@
    Field guide:
      id       unique, lowercase, no spaces (used internally)
      tab      which sub-tab it appears in — must match an id in
-              config.js → projectTabs ("thermal", "em", "design", "code")
+              config.js → projectTabs ("thermal", "em", "design", "code").
+              An array shows the same entry under several sub-tabs,
+              e.g. tab: ["em", "design"]
      featured (optional) true → full-width highlight row shown first
+     wip      (optional) true → "Under Construction" hazard tape on the card.
+              Delete the line once the entry is actually written.
      title    card + detail heading
      date     free text, e.g. "2026" or "Spring 2026"
      summary  ONE line, shown on the card
@@ -15,6 +19,8 @@
      tags     short keywords, shown as chips
      sections (optional) extra headed blocks after the description —
               [{ heading, body: [paragraphs], items: [bullets] }]
+     cover    (optional) card-cover image path, when the first gallery
+              photo isn't the best one to lead with (e.g. a featured row)
      images   photos in assets/images/ — first one is the card cover.
               Each entry is either "assets/images/x.jpg" or
               { src: "...", caption: "..."}. Leave [] for a gradient cover.
@@ -27,7 +33,7 @@ var PROJECTS = [
   {
     id: "aero-propulsion",
     tab: "thermal",
-    featured: true,   // full-width row at the top of the grid
+    wip: true,
     title: "Duke AERO — Liquid Rocket Engine",
     date: "2025 — present",
     summary: "CAD and Ansys CFD for combustion and cooling of an experimental liquid engine.",
@@ -44,6 +50,7 @@ var PROJECTS = [
   {
     id: "rc-airplane",
     tab: "design",
+    wip: true,
     title: "RC Airplane",
     date: "EDIT ME",
     summary: "PLACEHOLDER — scratch-built radio-controlled airplane, details coming.",
@@ -54,21 +61,6 @@ var PROJECTS = [
     images: [],
     docs: [],
     links: [{ name: "Flight code on GitHub (C++)", url: "https://github.com/Ilan-123/Plane" }],
-  },
-
-  {
-    id: "electrical-generator",
-    tab: "em",
-    title: "Electrical Generator",
-    date: "EDIT ME",
-    summary: "PLACEHOLDER — hand-built electrical generator, details coming.",
-    description: [
-      "PLACEHOLDER — Ilan will fill this in: generator topology, magnets/windings, output measurements, what drove the design.",
-    ],
-    tags: ["Electromagnetics", "Generator", "Build"],
-    images: [],
-    docs: [],
-    links: [],
   },
 
   {
@@ -161,8 +153,82 @@ var PROJECTS = [
   },
 
   {
+    id: "electrical-generator",
+    tab: ["em", "design"],
+    featured: true,   // full-width row, cover on the left (alternates with EITSIM)
+    cover: "assets/images/generator-full-assembly.jpg",   // the machine itself, not fig. 1's bench
+    title: "Axial-Flux Flywheel Generator",
+    date: "2021 — 2022",
+    summary: "Built at fifteen, in lockdown: eight magnets a side, four hand-wound coils, and a gym plate for a flywheel. The first version tore itself apart.",
+    description: [
+      "In 2021 I was fifteen, locked down in São Paulo, and I watched a video about flywheel batteries — machines that store energy as spinning mass instead of chemistry. I set out to build one from what a middle schooler can reach: styrofoam, glue, and enamelled copper wire cut with a craft knife (fig. 1). It destroyed itself. The magnetic attraction between the two rotor disks pulled them into each other and the foam folded inward, without ever lighting a single LED (figs. 2, 3). Fifty-seven newtons of pull through a foam disk with eight holes cut in it — §9 of the PDF works out why, with the equation I did not have at the time.",
+      "Six months later I came back to it knowing the material had to change. A friend's father taught engineering at a local university and offered to print the parts; he just asked me to send him the CAD file, in two days. I had to look up what a CAD file was. Two days of teaching myself Tinkercad on a laptop I had been using for Minecraft (all five models are linked below), a few rounds of parts in the post, and six weeks of assembly between school days — and it ran (figs. 4–6, video 1).",
+      "Over the next three months I added the parts that made it measurable: a hand crank, a 4:1 planetary gearbox (fig. 7), and a spool that drops a known mass from a known height (video 4). It was my first large project and it still sits on a shelf in my room. The PDF below is the analysis I could not write at fifteen.",
+    ],
+    sections: [
+      {
+        heading: "How it works",
+        body: [
+          "A dual-rotor, coreless axial-flux permanent-magnet generator. Two printed disks each carry eight neodymium magnets in alternating polarity, spinning either side of four hand-wound coils in series — about 400 turns of AWG 32 apiece in a 5 × 6 mm window. Four pole pairs mean the coils see 20 Hz at only 300 rpm, and the AC output runs through a full-bridge rectifier on a breadboard before it reaches the LEDs; video 2 is a single coil being characterised against the spinning rotor. §1–§4 of the PDF derive the machine from Faraday's law: where the voltage comes from, why more turns stop helping, and the speed below which the LEDs simply cannot light.",
+        ],
+      },
+      {
+        heading: "Does it agree with theory?",
+        body: [
+          "A hand crank is not a measurement, so the last thing I built was a spool that drops 200 g through one metre — 1.96 J of input, repeatable every time. Reading the meter frame by frame through that drop (video 3) gives the only quantitative data the project ever produced, and §8 of the PDF turns it into the machine's voltage constant: 0.10 V·s/rad measured, against 0.11 predicted from the magnets and the winding geometry alone. Two independent routes to the same number — though §8 is also clear about how much that agreement is worth, since the fall speed is only good to ±30%.",
+        ],
+      },
+    ],
+    tags: ["Electromagnetics", "Faraday Induction", "Permanent Magnets", "3D Printing",
+           "CAD", "Tinkercad", "Rectification", "Energy Storage", "Self-taught"],
+    images: [
+      { src: "assets/images/generator-tools.jpg",
+        caption: "Fig. 1 — Everything the first version was made of: hand-wound coils, LEDs, a spool of magnet wire, a soldering iron, a glue gun and offcuts of styrofoam." },
+      { src: "assets/images/generator-styrofoam-v1.jpg",
+        caption: "Fig. 2 — Version one, cut from styrofoam by hand. It never lit an LED." },
+      { src: "assets/images/generator-failure-vs-printed.jpg",
+        caption: "Fig. 3 — Why the project stopped for six months. In my hand, the styrofoam rotor after the magnets pulled it into itself; on the table, its replacements — printed disks with eight closed pockets, the magnets that did the damage, a bearing, and the 2 kg gym plate that became the flywheel." },
+      { src: "assets/images/generator-shaft.jpg",
+        caption: "Fig. 4 — Fitting the weight plates to the copper-pipe shaft. Standard gym plates turned out to fit the printed hub adapter exactly, which is why the flywheel could be swapped between 2 kg and 5 kg." },
+      { src: "assets/images/generator-half-assembled.jpg",
+        caption: "Fig. 5 — Half assembled: shaft and flywheel running in the PVC frame, with the four coils and the breadboard still loose on the desk." },
+      { src: "assets/images/generator-full-assembly.jpg",
+        caption: "Fig. 6 — The machine complete, minus the flywheel: rotors, coil holder, bridge rectifier and a lit LED on the breadboard." },
+      { src: "assets/images/generator-gearbox.jpg",
+        caption: "Fig. 7 — The 4:1 planetary gearbox mounted on the frame, driving the shaft from the hand crank." },
+    ],
+    video: [
+      { file: "assets/video/generator-first-success.mp4",
+        poster: "assets/images/generator-first-success-poster.jpg",
+        caption: "Video 1 — It works. Three blue LEDs on the breadboard, driven by hand through the rectifier." },
+      { file: "assets/video/generator-coil-test.mp4",
+        poster: "assets/images/generator-coil-test-poster.jpg",
+        caption: "Video 2 — Characterising one coil at a time: a single coil held against the spinning rotor reads a few tenths of a volt on the meter." },
+      { file: "assets/video/generator-gravity-drop.mp4",
+        poster: "assets/images/generator-gravity-drop-poster.jpg",
+        caption: "Video 3 — The measurement that mattered, slowed 2×: a 200 g mass falls, and the meter climbs to 4.6 V as the rotor accelerates. These are the twelve readings plotted in the PDF." },
+      { file: "assets/video/generator-drop-leds.mp4",
+        poster: "assets/images/generator-drop-leds-poster.jpg",
+        caption: "Video 4 — The same drop, driving the LEDs: potential energy to kinetic energy to light, in one continuous shot." },
+    ],
+    docs: [
+      { name: "Physics Teardown — Faraday induction, flywheel storage, and why the first prototype imploded (12 pp)",
+        file: "assets/docs/generator-physics-teardown.pdf" },
+    ],
+    links: [
+      { name: "CAD — magnet holder & coils (Tinkercad)", url: "https://www.tinkercad.com/things/2eQHYODI72g-magnet-holder-and-copper-wire-coils?sharecode=BSwrCkvyPxypFUSPQQhxcVgHgzoQOB-G5wf76oISZC4" },
+      { name: "CAD — coil holder (Tinkercad)", url: "https://www.tinkercad.com/things/eS1fPkHjI8a-coils-holder?sharecode=cH58nPcXVRiTfp46UTC_zQzTLJh9ZYc8rFFcrhsKZpw" },
+      { name: "CAD — 4:1 planetary gearbox (Tinkercad)", url: "https://www.tinkercad.com/things/bsliIvDM4vG-planetary-gearbox-41?sharecode=xUv1ApZ4Wu8NFFUVF2Wyzq9TivU9x_-I6v-Kpl8jgDc" },
+      { name: "CAD — hand crank (Tinkercad)", url: "https://www.tinkercad.com/things/jjCg1GAWyCz-hand-crank?sharecode=73hgl6E4q2lhxeGdMMd95dIDnB5CsthITeNxCvqEY-E" },
+      { name: "CAD — potential-energy spool (Tinkercad)", url: "https://www.tinkercad.com/things/13qAvB3pymn-potential-energy-roll?sharecode=K6cFiqOxdQNaWvpDE5JnQDvxRhPvPDIm7zYj_akAFIU" },
+      { name: "The video that started it — flywheel battery", url: "https://youtu.be/yhu3s1ut3wM" },
+    ],
+  },
+
+  {
     id: "github-projects",
     tab: "code",
+    wip: true,
     title: "GitHub Projects",
     date: "EDIT ME",
     summary: "PLACEHOLDER — selected software projects, details coming.",

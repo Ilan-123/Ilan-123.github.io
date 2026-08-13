@@ -123,6 +123,10 @@
     return id;
   }
 
+  /* a project's `tab` is one id or an array of them */
+  function tabsOf(p) { return [].concat(p.tab); }
+  function tabLabels(p) { return tabsOf(p).map(tabLabel).join(" · "); }
+
   function renderSubtabs() {
     $("subtabs").innerHTML = subtabDefs.map(function (tdef) {
       return '<button class="subtab' + (tdef.id === currentTab ? " active" : "") +
@@ -153,8 +157,8 @@
   function imgSrc(x) { return x.src || x; }
 
   function coverHtml(p) {
-    if (p.images && p.images.length) {
-      return '<div class="card-cover"><img src="' + esc(imgSrc(p.images[0])) +
+    if (p.cover || (p.images && p.images.length)) {
+      return '<div class="card-cover"><img src="' + esc(p.cover || imgSrc(p.images[0])) +
         '" alt="" loading="lazy"></div>';
     }
     return '<div class="card-cover placeholder ' + coverClass(p.id) +
@@ -163,7 +167,7 @@
 
   function renderProjects() {
     var list = PROJECTS.filter(function (p) {
-      return currentTab === "all" || p.tab === currentTab;
+      return currentTab === "all" || tabsOf(p).indexOf(currentTab) !== -1;
     });
     /* featured work reads first, before the grid */
     list = list.filter(function (p) { return p.featured; })
@@ -176,12 +180,12 @@
         cls += " featured" + (featIdx % 2 ? " alt" : "");
         featIdx++;
       }
-      var tape = p.id === "timpel-eit-simulator" ? "" :
-        '<span class="card-tape" aria-hidden="true">Under Construction</span>';
+      var tape = p.wip ?
+        '<span class="card-tape" aria-hidden="true">Under Construction</span>' : "";
       return '<button class="' + cls + '" data-project="' + esc(p.id) + '">' +
         coverHtml(p) +
         '<div class="card-body">' +
-        '<p class="card-meta">' + esc(p.date) + " · " + esc(tabLabel(p.tab)) + "</p>" +
+        '<p class="card-meta">' + esc(p.date) + " · " + esc(tabLabels(p)) + "</p>" +
         "<h3>" + esc(p.title) + "</h3>" +
         "<p>" + esc(p.summary) + "</p>" +
         tagsHtml(p.tags) +
@@ -208,7 +212,7 @@
     var images = p.images || [];
     galleryImages = images.map(imgSrc);
     var html =
-      '<p class="detail-meta">' + esc(p.date) + " · " + esc(tabLabel(p.tab)) + "</p>" +
+      '<p class="detail-meta">' + esc(p.date) + " · " + esc(tabLabels(p)) + "</p>" +
       '<h2 id="detail-title">' + esc(p.title) + "</h2>" +
       tagsHtml(p.tags) +
       '<div class="detail-desc">' + (p.description || []).map(function (para) {

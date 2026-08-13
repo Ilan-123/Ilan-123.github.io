@@ -72,6 +72,24 @@ Then open <http://localhost:8000> in your browser. Stop the server with `Ctrl+C`
 
 Projects with no `images` yet get an automatic plasma-gradient cover — nothing breaks.
 
+Three optional fields are worth knowing about:
+
+| Field | What it does |
+|---|---|
+| `featured: true` | Full-width highlight row at the top of the grid. Covers alternate left/right, so keep the count small — two reads well, four stops being a highlight. |
+| `wip: true` | Draws the black-and-yellow "Under Construction" tape. **Delete the line when you write the entry** — the tape is driven entirely by this flag, so an entry that still has it looks unfinished no matter how finished it is. |
+| `cover: "assets/images/x.jpg"` | Card cover, when `images[0]` isn't the right one to lead with. Useful when the gallery is in narrative order and the best photo isn't first. |
+
+**One entry, several sub-tabs.** `tab` takes an array as well as a string:
+
+```js
+  tab: ["em", "design"],           // shows up under BOTH sub-tabs
+```
+
+The card then lists both labels in its meta line. Use it when a project genuinely
+belongs in two places (the generator is electromagnetics *and* CAD work); don't use it
+to pad a thin sub-tab, because the same card appearing everywhere reads as filler.
+
 Sections render in a fixed order, whatever order you write the fields in:
 **description → sections → Gallery → Video → Documentation → Links.**
 
@@ -151,6 +169,30 @@ ffmpeg -i INPUT.mp4 -vf "fps=1,scale=300:-2,tile=8x4" -frames:v 1 /tmp/check.jpg
 ```
 
 That's one frame per second in a single contact sheet.
+
+### 3.4 Photos: bake the rotation in, then shrink
+
+Phone photos carry an EXIF `Orientation` tag instead of being stored the right way up.
+Browsers honour it, but plenty of tools don't, so a photo that looks fine in the gallery
+can appear sideways elsewhere. Check before you trust it:
+
+```bash
+file -b photo.jpg | tr ',' '\n' | grep -i orientation   # "upper-left" = already upright
+```
+
+`ffmpeg` **auto-applies** the tag when it reads a JPEG, so a plain re-encode both fixes
+the rotation and, with `-map_metadata -1`, strips the tag so nothing can re-apply it.
+Do **not** add a `transpose` filter — that rotates a second time:
+
+```bash
+ffmpeg -i IN.jpg -vf "scale=w=1500:h=1500:force_original_aspect_ratio=decrease" \
+       -map_metadata -1 -q:v 4 assets/images/NAME.jpg
+```
+
+`force_original_aspect_ratio=decrease` caps the **long** edge at 1500 px whichever way
+round the photo is, so one command handles portrait and landscape. `-q:v 4` lands most
+photos around 150–200 KB. Crop before scaling when a shot has dead space — `crop=W:H:X:Y`
+takes coordinates in the *rotated* frame, since ffmpeg has already applied the tag.
 
 ## 4. Rename tabs / sub-tabs, links, skills, timeline
 
@@ -234,6 +276,25 @@ serial numbers, and internal verification findings. The Technical Overview PDF i
 need a human eye — text scanning can't see a face in a screen reflection or a serial
 number on an asset tag.
 
+### Rebuilding the generator Physics Teardown PDF
+
+Unlike the Timpel document below, this one has nothing confidential in it, so its source
+lives in the repo: `docs/generator-physics.html` — one self-contained file, with every
+diagram as inline SVG and no external assets. Edit it, then print it with headless Chrome:
+
+```bash
+cp docs/generator-physics.html /mnt/c/Users/<you>/AppData/Local/Temp/gen.html
+"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" --headless --disable-gpu \
+  --no-pdf-header-footer --print-to-pdf="C:\Users\<you>\AppData\Local\Temp\gen.pdf" \
+  "file:///C:/Users/<you>/AppData/Local/Temp/gen.html"
+cp /mnt/c/Users/<you>/AppData/Local/Temp/gen.pdf assets/docs/generator-physics-teardown.pdf
+```
+
+Chrome has to be the Windows one (WSL has no browser), which is why the file is copied to a
+Windows-visible path first — Chrome cannot open a `\\wsl$` path reliably. Page size, margins
+and page-break rules are all in the `@page` block at the top of the HTML. To check the result
+without a PDF viewer: `pip install pypdfium2 pillow` in a venv and render the pages to PNG.
+
 #### How the abridged PDF was produced
 
 The Technical Overview shipped here was built by a script that read the original
@@ -293,7 +354,11 @@ asset tag, or a patient identifier inside a screenshot.
       is based on the resume; paste any LinkedIn-only info as text for Claude).
 - [x] **Current resume** — used for About/timeline and saved as `assets/docs/cv.pdf`.
 - [ ] Flesh out the remaining placeholder projects in `js/projects.js`:
-      RC airplane · electrical generator · GitHub projects.
+      RC airplane · GitHub projects. (Each still-unwritten entry carries `wip: true`,
+      which is what draws the "Under Construction" tape — delete that line when you
+      write the entry.)
+- [x] **Electrical generator** — full entry with 7 figures, 4 clips, the five Tinkercad
+      models and the Physics Teardown PDF.
 - [x] **Timpel / EITSIM Studio** — full entry with 8 figures, 3 videos and the
       Technical Overview PDF.
 - [x] Add your **GitHub URL** to `js/config.js` (`github:`).

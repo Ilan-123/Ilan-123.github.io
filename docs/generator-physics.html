@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Axial-Flux Flywheel Generator — Physics Teardown</title>
+<style>
+  /* ── print setup ─────────────────────────────────────────── */
+  @page { size: A4; margin: 17mm 16mm 15mm 16mm; }
+
+  :root{
+    --ink:      #16181d;
+    --ink-soft: #4a4f57;
+    --rule:     #c9ccd2;
+    --accent:   #b98900;          /* darkened site yellow, legible on paper */
+    --accent-bg:#fff7d9;
+    --grid:     #e8eaee;
+  }
+
+  html { font-size: 10.5pt; }
+  body{
+    margin:0; color:var(--ink);
+    font-family:"Cambria","Georgia","DejaVu Serif",serif;
+    line-height:1.5; text-align:justify; hyphens:auto;
+  }
+  p{ margin:0 0 .62em; }
+  em{ font-style:italic; }
+  strong{ font-weight:700; }
+
+  /* ── cover ───────────────────────────────────────────────── */
+  .cover{ padding-top:14mm; page-break-after:always; text-align:left; }
+  .cover .kicker{
+    font-family:"Consolas","DejaVu Sans Mono",monospace;
+    font-size:8.5pt; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:6mm;
+  }
+  .cover h1{
+    font-size:29pt; line-height:1.12; margin:0 0 4mm; font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .cover .sub{ font-size:13pt; color:var(--ink-soft); margin:0 0 10mm; font-style:italic; }
+  .cover .byline{
+    border-top:2px solid var(--accent); padding-top:3mm; font-size:10pt;
+    font-family:"Consolas","DejaVu Sans Mono",monospace; color:var(--ink-soft);
+  }
+  .cover .byline b{ color:var(--ink); }
+  .abstract{
+    margin-top:12mm; padding:5mm 6mm; background:var(--accent-bg);
+    border-left:3px solid var(--accent); font-size:10pt;
+  }
+  .abstract p:last-child{ margin-bottom:0; }
+
+  /* ── headings ────────────────────────────────────────────── */
+  h2{
+    font-size:14pt; margin:9mm 0 3mm; padding-bottom:1.5mm;
+    border-bottom:1.5px solid var(--accent); page-break-after:avoid;
+    letter-spacing:-0.01em;
+  }
+  h2 .n{
+    font-family:"Consolas","DejaVu Sans Mono",monospace;
+    font-size:11pt; color:var(--accent); margin-right:3mm;
+  }
+  h3{ font-size:11pt; margin:5mm 0 1.5mm; page-break-after:avoid; font-style:italic; }
+
+  /* ── equations ───────────────────────────────────────────── */
+  .eq{
+    display:flex; align-items:center; gap:4mm;
+    margin:3.5mm 0; page-break-inside:avoid;
+  }
+  .eq .body{
+    flex:1; text-align:center;
+    font-family:"Cambria Math","Cambria","Georgia",serif;
+    font-size:12pt;
+  }
+  .eq .num{
+    font-family:"Consolas","DejaVu Sans Mono",monospace;
+    font-size:9pt; color:var(--ink-soft); min-width:9mm; text-align:right;
+  }
+  .v{ font-style:italic; }                       /* scalar variable      */
+  .vb{ font-style:italic; font-weight:700; }     /* vector               */
+  .u{ font-style:normal; }                       /* units / roman text   */
+  .frac{ display:inline-block; vertical-align:middle; text-align:center; margin:0 .18em; }
+  .frac > span{ display:block; padding:0 .3em; line-height:1.25; }
+  .frac .den{ border-top:1px solid var(--ink); }
+  sub,sup{ font-size:.72em; line-height:0; }
+
+  /* ── figures ─────────────────────────────────────────────── */
+  figure{ margin:5mm 0; page-break-inside:avoid; text-align:center; }
+  figure svg{ max-width:100%; height:auto; }
+  figcaption{
+    font-size:8.8pt; color:var(--ink-soft); text-align:left;
+    margin-top:2mm; padding-left:2mm; border-left:2px solid var(--accent);
+    line-height:1.4;
+  }
+  figcaption b{ color:var(--ink); }
+
+  /* ── tables ──────────────────────────────────────────────── */
+  table{ width:100%; border-collapse:collapse; font-size:9pt; margin:4mm 0; page-break-inside:avoid; }
+  th,td{ text-align:left; padding:1.4mm 2mm; border-bottom:1px solid var(--rule); vertical-align:top; }
+  th{
+    font-family:"Consolas","DejaVu Sans Mono",monospace; font-size:8pt;
+    text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft);
+    border-bottom:1.5px solid var(--accent);
+  }
+  td.sym{ font-style:italic; white-space:nowrap; width:12%; }
+  td.val{ font-family:"Consolas","DejaVu Sans Mono",monospace; font-size:8.5pt; white-space:nowrap; }
+  .tag{
+    font-family:"Consolas","DejaVu Sans Mono",monospace; font-size:7.2pt;
+    text-transform:uppercase; letter-spacing:.06em; padding:.3mm 1.4mm;
+    border:1px solid var(--rule); border-radius:2px; color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .tag.m{ border-color:var(--accent); color:var(--accent); }   /* measured  */
+
+  /* ── call-outs ───────────────────────────────────────────── */
+  .note{
+    margin:4mm 0; padding:3mm 4mm; background:#f5f6f8;
+    border-left:3px solid var(--rule); font-size:9.4pt; page-break-inside:avoid;
+  }
+  .note.key{ background:var(--accent-bg); border-left-color:var(--accent); }
+  .note p:last-child{ margin-bottom:0; }
+  .note .lbl{
+    display:block; font-family:"Consolas","DejaVu Sans Mono",monospace;
+    font-size:7.6pt; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--accent); margin-bottom:1.2mm;
+  }
+  ul{ margin:0 0 .62em; padding-left:5mm; }
+  li{ margin-bottom:.28em; }
+
+  .foot{
+    margin-top:8mm; padding-top:2mm; border-top:1px solid var(--rule);
+    font-size:8.2pt; color:var(--ink-soft); text-align:left;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ COVER ══════════════════════════ -->
+<section class="cover">
+  <div class="kicker">Retrospective engineering analysis · personal project</div>
+  <h1>An Axial-Flux Flywheel Generator,<br>Taken Apart on Paper</h1>
+  <p class="sub">The physics of a machine I built out of PVC pipe, copper plumbing tube and
+     3D-printed plastic at fifteen — worked out properly, fifteen years of schooling later.</p>
+  <div class="byline">
+    <b>Ilan Jordan</b> · Mechanical Engineering &amp; Materials Science · Physics · Duke University<br>
+    Machine built São Paulo, 2021–2022 &nbsp;·&nbsp; Analysis written 2026
+  </div>
+
+  <div class="abstract">
+    <p><b>What this is.</b> In 2021, locked down and fifteen, I built a generator: two 3D-printed
+    rotor disks carrying eight permanent magnets each, spinning either side of four hand-wound
+    coils, on a copper-pipe shaft in a PVC frame. It lit LEDs. A gym weight plate bolted to the
+    shaft served as a flywheel; a hand crank through a 4:1 planetary gearbox drove it; a
+    200&nbsp;g mass on a string over a spool gave it a repeatable, calculable energy input.</p>
+
+    <p>I did not have this mathematics then. I had a YouTube video about flywheel batteries,
+    a soldering iron and a first prototype that destroyed itself. This document is the analysis
+    I could not write at the time: what the machine actually does, which numbers govern it, why
+    the first version collapsed, and what the measurements caught on video really say. Where a
+    quantity was measured it is marked <span class="tag m">measured</span>; where it is estimated
+    from photographs or standard part sizes it is marked <span class="tag">est.</span> and the
+    estimate is stated. Nothing here is tuned to make the machine look better than it was.</p>
+  </div>
+</section>
+
+<!-- ═════════════════════════ 1. MACHINE ═════════════════════ -->
+<h2><span class="n">1</span>The machine</h2>
+
+<p>The topology is a <strong>dual-rotor, coreless axial-flux permanent-magnet generator</strong>.
+Two disks of magnets rotate on a common shaft; a stationary disk of air-cored coils sits in the
+gap between them. Flux crosses the gap parallel to the shaft — axially — so every magnet passes
+squarely over a coil once per pole. Almost every small wind-turbine generator built by hobbyists
+uses this arrangement, for the same reason I ended up at it: it needs no iron core, no
+laminations, no machining, and it tolerates a builder's tolerances.</p>
+
+<figure>
+<svg viewBox="0 0 620 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Section view of the axial-flux generator">
+  <defs>
+    <marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 z" fill="#16181d"/>
+    </marker>
+    <marker id="ary" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 z" fill="#b98900"/>
+    </marker>
+  </defs>
+  <g fill="none" stroke="#16181d" stroke-width="1.5">
+    <!-- shaft -->
+    <rect x="40" y="115" width="540" height="16" fill="#f2e5d0"/>
+    <!-- bearings -->
+    <rect x="70" y="103" width="26" height="40" fill="#e8eaee"/>
+    <rect x="520" y="103" width="26" height="40" fill="#e8eaee"/>
+    <!-- flywheel -->
+    <rect x="128" y="42" width="20" height="162" rx="5" fill="#f7d98a"/>
+    <!-- rotor disks -->
+    <rect x="286" y="58" width="14" height="130" fill="#3a3f47"/>
+    <rect x="356" y="58" width="14" height="130" fill="#3a3f47"/>
+    <!-- magnets -->
+    <g fill="#b98900" stroke="none">
+      <rect x="300" y="66" width="9" height="26"/><rect x="300" y="100" width="9" height="26"/>
+      <rect x="300" y="152" width="9" height="26"/><rect x="300" y="118" width="9" height="26"/>
+      <rect x="347" y="66" width="9" height="26"/><rect x="347" y="100" width="9" height="26"/>
+      <rect x="347" y="152" width="9" height="26"/><rect x="347" y="118" width="9" height="26"/>
+    </g>
+    <!-- stator coils -->
+    <g fill="#c05a2e" stroke="#16181d" stroke-width="1">
+      <rect x="320" y="68" width="16" height="24" rx="3"/>
+      <rect x="320" y="150" width="16" height="24" rx="3"/>
+    </g>
+    <rect x="316" y="58" width="24" height="130" stroke-dasharray="3 3" stroke="#8a8f98"/>
+    <!-- spool -->
+    <rect x="452" y="86" width="16" height="74" rx="3" fill="#e8eaee"/>
+    <path d="M460 160 L460 226" stroke="#16181d" stroke-width="1"/>
+    <rect x="452" y="226" width="16" height="14" fill="#8a8f98"/>
+    <!-- flux arrows across the gap -->
+    <g stroke="#b98900" stroke-width="1.6" marker-end="url(#ary)">
+      <path d="M311 79 L345 79"/><path d="M345 165 L311 165"/>
+    </g>
+    <!-- rotation -->
+    <path d="M170 60 a40 40 0 0 1 34 22" stroke="#16181d" marker-end="url(#ar)"/>
+  </g>
+  <g font-family="Consolas,DejaVu Sans Mono,monospace" font-size="10" fill="#16181d">
+    <text x="138" y="22" text-anchor="middle">flywheel</text>
+    <text x="138" y="34" text-anchor="middle" font-size="8.5" fill="#4a4f57">2 kg plate</text>
+    <text x="176" y="52">ω</text>
+    <text x="328" y="42" text-anchor="middle">stator</text>
+    <text x="328" y="212" text-anchor="middle" font-size="8.5" fill="#4a4f57">4 coils, ~400 turns</text>
+    <text x="250" y="205" text-anchor="middle">rotor</text>
+    <text x="406" y="205" text-anchor="middle">rotor</text>
+    <text x="328" y="22" text-anchor="middle" font-size="8.5" fill="#4a4f57">8 magnets per rotor, N–S alternating</text>
+    <text x="83" y="96" text-anchor="middle" font-size="8.5">bearing</text>
+    <text x="533" y="96" text-anchor="middle" font-size="8.5">bearing</text>
+    <text x="460" y="78" text-anchor="middle" font-size="8.5">drop spool</text>
+    <text x="482" y="238" font-size="8.5">200 g</text>
+    <text x="328" y="105" text-anchor="middle" font-size="8.5" fill="#b98900">flux B</text>
+    <text x="44" y="152" font-size="8.5" fill="#4a4f57">copper-pipe shaft</text>
+  </g>
+</svg>
+<figcaption><b>Figure 1 — Section through the machine.</b> Flux crosses the air gap axially,
+from one rotor disk to the other, passing through the stationary coils on the way. The flywheel
+plate and the drop-spool sit on the same shaft; the hand crank and gearbox (not shown) drive the
+left-hand end. Drawn to describe the layout, not to scale.</figcaption>
+</figure>
+
+<p>Three consequences follow from having no iron in the stator, and all three mattered to a
+fifteen-year-old with a hot-glue gun:</p>
+
+<ul>
+  <li><strong>No cogging.</strong> With an iron-toothed stator, the magnets snap from tooth to
+      tooth and the shaft resists being turned even with the output open-circuit. A coreless
+      stator has no preferred angular position, so the machine spins freely under no load — which
+      is exactly what you want when the input is a falling 200&nbsp;g mass with 2&nbsp;J to its
+      name.</li>
+  <li><strong>No core loss.</strong> There is no iron to carry hysteresis or eddy-current losses,
+      so at these speeds essentially all the electrical loss is <span class="v">I</span><sup>2</sup><span class="v">R</span>
+      in the copper.</li>
+  <li><strong>A large effective air gap, and a weak field to show for it.</strong> The flux has to
+      cross the coil thickness plus two mechanical clearances instead of a millimetre of air.
+      This is the price of the other two, and §2 shows how heavily it is paid.</li>
+</ul>
+
+<!-- ═════════════════════════ 2. INDUCTION ═══════════════════ -->
+<h2><span class="n">2</span>Where the voltage comes from</h2>
+
+<p>Faraday's law is the whole machine in one line. The flux threading one turn of a coil is the
+field integrated over the turn's area,</p>
+
+<div class="eq"><div class="body">
+  Φ = ∫<sub><span class="v">A</span></sub> <span class="vb">B</span> · d<span class="vb">A</span>
+</div><div class="num">(1)</div></div>
+
+<p>and the electromotive force appearing across a coil of <span class="v">N</span> turns is the
+rate at which that flux changes, with the minus sign of Lenz's law recording that the induced
+current opposes the change that made it:</p>
+
+<div class="eq"><div class="body">
+  ε = −<span class="v">N</span> <span class="frac"><span>dΦ</span><span class="den">d<span class="v">t</span></span></span>
+</div><div class="num">(2)</div></div>
+
+<p>Nothing in the coil knows about rotation; it only knows that the flux through it is changing.
+As a magnet sweeps across a coil the flux rises from zero to a maximum and back; as the next
+magnet — reversed in polarity — arrives, it swings equally far negative. To a good approximation
+for a sinusoidally-varying overlap,</p>
+
+<div class="eq"><div class="body">
+  Φ(<span class="v">t</span>) ≈ Φ̂ sin(<span class="v">ω</span><sub>e</sub><span class="v">t</span>)
+  &nbsp;&nbsp;⟹&nbsp;&nbsp;
+  ε(<span class="v">t</span>) = −<span class="v">N</span>Φ̂<span class="v">ω</span><sub>e</sub> cos(<span class="v">ω</span><sub>e</sub><span class="v">t</span>)
+</div><div class="num">(3)</div></div>
+
+<p>where <span class="v">ω</span><sub>e</sub> is the <em>electrical</em> angular frequency. It is
+not the shaft speed. Each pair of magnets — one north-facing, one south-facing — gives one full
+electrical cycle per pass, so with <span class="v">p</span> pole pairs on the rotor,</p>
+
+<div class="eq"><div class="body">
+  <span class="v">ω</span><sub>e</sub> = <span class="v">p</span> <span class="v">ω</span><sub>m</sub>,
+  &nbsp;&nbsp;
+  <span class="v">f</span> = <span class="frac"><span><span class="v">p n</span></span><span class="den">60</span></span>
+  &nbsp;&nbsp;[<span class="u">Hz</span>, with <span class="v">n</span> in <span class="u">rpm</span>]
+</div><div class="num">(4)</div></div>
+
+<p>My rotors carry eight magnets each, alternating in polarity, so
+<span class="v">p</span>&nbsp;=&nbsp;4. At 300&nbsp;rpm the coils see 20&nbsp;Hz — mains-like
+frequencies out of a hand crank, purely because the pole count does the work that speed would
+otherwise have to. Putting (3) and (4) together gives the peak EMF of the whole stator, with
+<span class="v">N</span><sub>tot</sub> turns in series:</p>
+
+<div class="eq"><div class="body">
+  ε̂ = <span class="v">N</span><sub>tot</sub> Φ̂ <span class="v">p</span> <span class="v">ω</span><sub>m</sub>
+  ≡ <span class="v">k</span> <span class="v">ω</span><sub>m</sub>
+</div><div class="num">(5)</div></div>
+
+<div class="note key">
+  <span class="lbl">The one equation to keep</span>
+  <p>Voltage is proportional to speed, and the constant of proportionality
+  <span class="v">k</span> = <span class="v">N</span><sub>tot</sub>Φ̂<span class="v">p</span> is
+  fixed by construction: turns, flux per pole, pole pairs. There is no other knob. Every design
+  decision in this project — more turns, thinner wire, smaller air gap, more magnets, a gearbox
+  to raise <span class="v">ω</span><sub>m</sub> — is an attempt to move one of those four terms.</p>
+</div>
+
+<h3>What the geometry predicts</h3>
+
+<p>Φ̂ is set by the field and by the area the turns actually enclose — and it is the
+<em>smaller</em> of the two apertures that governs. The neodymium magnets present a
+20 × 10&nbsp;mm face, 200&nbsp;mm<sup>2</sup>, but a turn wound on the 6&nbsp;mm former with a
+6&nbsp;mm build has a mean diameter of 12&nbsp;mm and encloses only</p>
+
+<div class="eq"><div class="body">
+  <span class="v">A</span><sub>turn</sub> = π(<span class="v">D</span><sub>mean</sub>/2)<sup>2</sup>
+  = π(6×10<sup>−3</sup>)<sup>2</sup> ≈ 1.13 × 10<sup>−4</sup> <span class="u">m<sup>2</sup></span>
+</div><div class="num">(6a)</div></div>
+
+<p>Crediting the turns with the magnet's area rather than their own is the easiest way to flatter
+a machine like this on paper, and it overstates the answer by nearly a factor of two. With
+<span class="v">B</span><sub>gap</sub> ≈ 0.15&nbsp;T across the working gap — a fair figure for
+neodymium blocks facing each other across a coil a few millimetres thick — and the 400 turns per
+coil that §3 derives from the winding window, four coils in series give</p>
+
+<div class="eq"><div class="body">
+  <span class="v">k</span><sub>ideal</sub> = 1600 × (0.15 × 1.13×10<sup>−4</sup>) × 4
+  ≈ 0.11 <span class="u">V·s/rad</span>
+</div><div class="num">(6b)</div></div>
+
+<p>That predicts 4&nbsp;V on the terminals at about 36&nbsp;rad/s — 350&nbsp;rpm. Hold on to the
+figure 0.11: §8 measures the same constant from an experiment that knows nothing about any of
+this geometry, and the comparison is the most instructive number in the document.</p>
+
+<!-- ═════════════════════════ 3. COIL ════════════════════════ -->
+<h2><span class="n">3</span>The coil as a real source</h2>
+
+<p>A coil is not an ideal voltage source; it is an EMF behind its own resistance. For enamelled
+copper of length ℓ and cross-section <span class="v">A</span><sub>w</sub>,</p>
+
+<div class="eq"><div class="body">
+  <span class="v">R</span> = <span class="frac"><span>ρ ℓ</span><span class="den"><span class="v">A</span><sub>w</sub></span></span>,
+  &nbsp;&nbsp; ρ<sub><span class="u">Cu</span></sub> = 1.68 × 10<sup>−8</sup> <span class="u">Ω·m</span>
+  = 0.0172 <span class="u">Ω·mm<sup>2</sup>/m</span>
+</div><div class="num">(7)</div></div>
+
+<p>AWG&nbsp;32 wire is 0.203&nbsp;mm across the bare copper —
+<span class="v">A</span><sub>w</sub> = 0.0324&nbsp;mm<sup>2</sup>, or 0.52&nbsp;Ω per metre — and
+0.25&nbsp;mm measured over the enamel <span class="tag m">measured</span>, which is the figure
+that decides how many turns will physically fit.</p>
+
+<h3>How many turns actually went on</h3>
+
+<p>The winding window in the printed holder is 5&nbsp;mm deep by 6&nbsp;mm wide
+<span class="tag m">measured</span> — 30&nbsp;mm<sup>2</sup> of cross-section to fill with
+0.25&nbsp;mm wire. Perfect square packing would put 16 turns in every square millimetre
+(1/<span class="v">d</span><sub>ins</sub><sup>2</sup>); hand-winding without a jig or a counter
+realistically reaches <span class="v">n</span><sub>A</sub> ≈ 12 or 13:</p>
+
+<div class="eq"><div class="body">
+  <span class="v">N</span> ≈ <span class="v">A</span><sub>window</sub> · <span class="v">n</span><sub>A</sub>
+  ≈ 30 × 13 ≈ 400 <span class="u">turns</span>
+  &nbsp;&nbsp;(<span class="u">ceiling: 480 square-packed, 555 hexagonal</span>)
+</div><div class="num">(8a)</div></div>
+
+<p>This matters because I remembered these coils as thousand-turn coils for years, and the window
+simply will not hold a thousand: 555 is a hard geometric ceiling and hand-winding does not come
+close to it. The first-generation coils — the fat hand-wound lumps in the earliest photographs —
+were much stubbier and did carry more wire; the printed holder that replaced them took a sleeker
+winding, and it is the sleeker one whose numbers appear throughout this document.</p>
+
+<p>Four hundred turns wound on the 6&nbsp;mm former, building out 6&nbsp;mm, gives a mean turn
+diameter of 12&nbsp;mm and so</p>
+
+<div class="eq"><div class="body">
+  ℓ = <span class="v">N</span> π <span class="v">D</span><sub>mean</sub>
+  = 400 × π × 0.012 ≈ 15 <span class="u">m</span>
+  &nbsp;&nbsp;⟹&nbsp;&nbsp;
+  <span class="v">R</span><sub>coil</sub> ≈ 7.8 <span class="u">Ω</span>
+</div><div class="num">(8b)</div></div>
+
+<p>Four in series is about 31&nbsp;Ω of source resistance and some 18&nbsp;g of copper — and 31&nbsp;Ω
+is a number worth remembering when §8 gets to where the energy went. It is also the easiest
+prediction in this document to falsify: put an ohmmeter across one coil, and if it does not read
+somewhere near 8&nbsp;Ω, equation (8a) is wrong and everything downstream of it moves.</p>
+
+<h3>Why more turns is not simply better</h3>
+
+<p>Adding turns raises the EMF linearly — but it also lengthens the wire, so the resistance rises
+linearly too. Into a load <span class="v">R</span><sub>L</sub> the delivered power is</p>
+
+<div class="eq"><div class="body">
+  <span class="v">P</span><sub>L</sub> =
+  <span class="frac"><span>ε<sup>2</sup> <span class="v">R</span><sub>L</sub></span><span class="den">(<span class="v">R</span><sub>coil</sub> + <span class="v">R</span><sub>L</sub>)<sup>2</sup></span></span>
+  , &nbsp; maximal at &nbsp; <span class="v">R</span><sub>L</sub> = <span class="v">R</span><sub>coil</sub>
+</div><div class="num">(9)</div></div>
+
+<p>With ε ∝ <span class="v">N</span> and <span class="v">R</span><sub>coil</sub> ∝
+<span class="v">N</span>, the short-circuit current
+ε/<span class="v">R</span><sub>coil</sub> is <em>independent of the number of turns</em> — it
+depends only on the winding window, the wire's resistivity and the rate of change of flux. Turns
+buy volts, never watts. What buys watts is copper cross-section in the window, flux, and speed.</p>
+
+<div class="note">
+  <span class="lbl">What I actually needed</span>
+  <p>The load was LEDs, which need <em>voltage</em> before they need current: below their forward
+  drop they draw nothing at all. Winding many turns of thin wire was, by accident, exactly the
+  right choice for the job — a high-voltage, high-impedance, low-current source. Had I been
+  charging a battery instead, the same coils would have been close to useless, and the fix would
+  have been fewer turns of much thicker wire.</p>
+</div>
+
+<!-- ═════════════════════════ 4. RECTIFIER ═══════════════════ -->
+<h2><span class="n">4</span>Rectification, and the voltage floor for light</h2>
+
+<p>What comes out of the coils is alternating: each pole reverses the flux, so the terminals swing
+symmetrically about zero. An LED conducts one way only, and would flash at half duty and sit dark
+for the other half. Learning what a full-bridge rectifier was, and building one on a breadboard,
+was the first piece of electronics I did on this project.</p>
+
+<figure>
+<svg viewBox="0 0 540 225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bridge rectifier circuit">
+  <defs>
+    <g id="dio">
+      <path d="M-8,-7 L8,0 L-8,7 z" fill="#16181d" stroke="none"/>
+      <path d="M8,-8 L8,8" stroke="#16181d" stroke-width="1.6"/>
+    </g>
+  </defs>
+  <g fill="none" stroke="#16181d" stroke-width="1.4">
+    <!-- AC source and its two leads to the AC nodes of the bridge -->
+    <circle cx="70" cy="90" r="22"/>
+    <path d="M58 90 q6 -11 12 0 q6 11 12 0"/>
+    <path d="M70 68 L70 40 L230 40"/>
+    <path d="M70 112 L70 140 L230 140"/>
+    <!-- bridge diamond: AC at top and bottom, DC- left, DC+ right -->
+    <path d="M230 40 L300 90 L230 140 L160 90 Z"/>
+    <!-- DC+ rail out of the right node -->
+    <path d="M300 90 L460 90"/>
+    <!-- DC- rail out of the left node, hopping over the lower AC lead -->
+    <path d="M160 90 L130 90 L130 133"/>
+    <path d="M130 133 a7 7 0 0 0 0 14" />
+    <path d="M130 147 L130 195 L460 195"/>
+    <!-- smoothing capacitor -->
+    <path d="M370 90 L370 128 M354 128 L386 128 M354 138 L386 138 M370 138 L370 195"/>
+    <!-- LED branch -->
+    <path d="M450 90 L450 108 M450 128 L450 195"/>
+    <path d="M441 126 l9 -14 l9 14 z" fill="#16181d" stroke="none"/>
+    <path d="M441 128 L459 128"/>
+    <path d="M464 104 l11 -8 M468 114 l11 -8" stroke-width="1"/>
+  </g>
+  <g fill="#16181d"><circle cx="370" cy="90" r="3"/><circle cx="370" cy="195" r="3"/></g>
+  <!-- the four diodes, all steering current toward the right-hand node -->
+  <use href="#dio" transform="translate(265,65) rotate(35.5)"/>
+  <use href="#dio" transform="translate(265,115) rotate(-35.5)"/>
+  <use href="#dio" transform="translate(195,65) rotate(-35.5)"/>
+  <use href="#dio" transform="translate(195,115) rotate(35.5)"/>
+  <g font-family="Consolas,DejaVu Sans Mono,monospace" font-size="9.5" fill="#16181d">
+    <text x="62" y="170" text-anchor="middle" font-size="8.5">4 coils</text>
+    <text x="62" y="182" text-anchor="middle" font-size="8.5" fill="#4a4f57">in series</text>
+    <text x="230" y="22" text-anchor="middle">bridge — 4 diodes</text>
+    <text x="310" y="82" font-size="8.5" fill="#4a4f57">+</text>
+    <text x="140" y="82" font-size="8.5" fill="#4a4f57">−</text>
+    <text x="336" y="162" text-anchor="end" font-size="8.5">smoothing C</text>
+    <text x="486" y="112" font-size="8.5">LEDs</text>
+    <text x="230" y="215" text-anchor="middle" font-size="8.5" fill="#4a4f57">whichever way the coils push, current leaves by the same rail</text>
+  </g>
+</svg>
+<figcaption><b>Figure 2 — The output stage as built.</b> Four coils in series feed a full-bridge
+rectifier, a smoothing capacitor and the LEDs. Two diodes conduct on each half-cycle, so the
+bridge costs two forward drops, not one.</figcaption>
+</figure>
+
+<p>The bridge buys both half-cycles at the price of two silicon drops in series, and the LED then
+takes its own. For light to appear at all, the instantaneous EMF must clear</p>
+
+<div class="eq"><div class="body">
+  ε̂ ≥ <span class="v">V</span><sub>f,LED</sub> + 2<span class="v">V</span><sub>f,diode</sub>
+  ≈ 3.0 + 2(0.7) = 4.4 <span class="u">V</span>
+</div><div class="num">(10)</div></div>
+
+<p>for blue LEDs, which are the expensive ones in forward drop — a red LED at 1.8&nbsp;V would
+have lit at 3.2&nbsp;V and made the machine look twice as good. Combining (10) with (5) gives the
+speed below which the machine is, visibly, a paperweight:</p>
+
+<div class="eq"><div class="body">
+  <span class="v">ω</span><sub>min</sub> =
+  <span class="frac"><span><span class="v">V</span><sub>f,LED</sub> + 2<span class="v">V</span><sub>f,diode</sub></span><span class="den"><span class="v">k</span></span></span>
+</div><div class="num">(11)</div></div>
+
+<p>This threshold is not a nuisance; it is the design specification. Everything downstream — the
+gearbox ratio, the flywheel, how high I had to lift the 200&nbsp;g mass — exists to keep
+<span class="v">ω</span><sub>m</sub> above <span class="v">ω</span><sub>min</sub> for long enough
+to see something.</p>
+
+<!-- ═════════════════════════ 5. TORQUE ══════════════════════ -->
+<h2><span class="n">5</span>What the electrical load feels like at the shaft</h2>
+
+<p>Close the circuit and the coils carry current; that current sits in the magnets' field and
+produces a force opposing the motion that created it. This is Lenz's law arriving as a mechanical
+sensation — the crank gets heavier the moment the LEDs light. Quantitatively, with the same
+constant <span class="v">k</span> from (5):</p>
+
+<div class="eq"><div class="body">
+  <span class="v">i</span> =
+  <span class="frac"><span><span class="v">k</span><span class="v">ω</span><sub>m</sub></span><span class="den"><span class="v">R</span><sub>coil</sub> + <span class="v">R</span><sub>L</sub></span></span>
+  , &nbsp;&nbsp;
+  <span class="v">τ</span><sub>brake</sub> = <span class="v">k</span> <span class="v">i</span> =
+  <span class="frac"><span><span class="v">k</span><sup>2</sup></span><span class="den"><span class="v">R</span><sub>coil</sub> + <span class="v">R</span><sub>L</sub></span></span>
+  <span class="v">ω</span><sub>m</sub>
+</div><div class="num">(12)</div></div>
+
+<p>The braking torque is proportional to speed: electrically, the machine behaves at the shaft
+exactly like a viscous damper with coefficient
+<span class="v">k</span><sup>2</sup>/(<span class="v">R</span><sub>coil</sub>+<span class="v">R</span><sub>L</sub>).
+The same <span class="v">k</span> that generates volts generates drag, and its square governs how
+hard the machine fights back. Two things follow that took me a long time to understand as a
+teenager:</p>
+
+<ul>
+  <li>An open-circuit generator is nearly free to spin, and a short-circuited one is nearly
+      impossible to turn. Nothing mechanical changed.</li>
+  <li>Power out and drag are the same phenomenon:
+      <span class="v">P</span> = <span class="v">τ</span><sub>brake</sub><span class="v">ω</span><sub>m</sub>
+      = <span class="v">k</span><sup>2</sup><span class="v">ω</span><sub>m</sub><sup>2</sup>/(<span class="v">R</span><sub>coil</sub>+<span class="v">R</span><sub>L</sub>).
+      There is no way to take energy out without being felt.</li>
+</ul>
+
+<p>Equation (12) also explains the shape of the gravity-drop measurement in §8. A hanging mass
+applies a constant torque <span class="v">m g r</span><sub>s</sub> at the spool. Against a
+speed-proportional brake, the shaft accelerates toward a terminal speed
+<span class="v">ω</span><sub>∞</sub> = <span class="v">m g r</span><sub>s</sub>(<span class="v">R</span><sub>coil</sub>+<span class="v">R</span><sub>L</sub>)/<span class="v">k</span><sup>2</sup>;
+below it, and with the machine's rotational inertia dominating, the speed ramps very nearly
+linearly — which is exactly what the voltmeter recorded.</p>
+
+<!-- ═════════════════════════ 6. FLYWHEEL ════════════════════ -->
+<h2><span class="n">6</span>The flywheel, and an honest reckoning of what it stores</h2>
+
+<p>The project began with a video about flywheel batteries, so a flywheel there had to be. A
+2&nbsp;kg cast gym plate fit the shaft adapter perfectly; the bore of a standard plate is a happy
+accident of engineering standardisation, and I tested up to 5&nbsp;kg on the same shaft. For a
+plate of mass <span class="v">m</span>, outer radius <span class="v">r</span><sub>o</sub> and bore
+radius <span class="v">r</span><sub>i</sub>:</p>
+
+<div class="eq"><div class="body">
+  <span class="v">I</span> = ½ <span class="v">m</span>(<span class="v">r</span><sub>o</sub><sup>2</sup> + <span class="v">r</span><sub>i</sub><sup>2</sup>)
+  , &nbsp;&nbsp;
+  <span class="v">E</span> = ½ <span class="v">I</span> <span class="v">ω</span><sub>m</sub><sup>2</sup>
+</div><div class="num">(13)</div></div>
+
+<p>With <span class="v">r</span><sub>o</sub> = 90&nbsp;mm and
+<span class="v">r</span><sub>i</sub> = 12.5&nbsp;mm, the 2&nbsp;kg plate gives
+<span class="v">I</span> ≈ 8.3 × 10<sup>−3</sup>&nbsp;kg·m<sup>2</sup>. Then:</p>
+
+<table>
+  <tr><th>Shaft speed</th><th>ω<sub>m</sub></th><th>Stored energy</th><th>Equivalent</th></tr>
+  <tr><td>100 rpm</td><td class="val">10.5 rad/s</td><td class="val">0.45 J</td><td>lifting the 200 g mass 23 cm</td></tr>
+  <tr><td>300 rpm</td><td class="val">31.4 rad/s</td><td class="val">4.1 J</td><td>lifting it 2.1 m</td></tr>
+  <tr><td>600 rpm</td><td class="val">62.8 rad/s</td><td class="val">16.3 J</td><td>lifting it 8.3 m</td></tr>
+  <tr><td>1000 rpm</td><td class="val">104.7 rad/s</td><td class="val">45.3 J</td><td>lifting it 23 m</td></tr>
+</table>
+
+<p>Energy goes as the <em>square</em> of speed but only linearly with mass, which is why real
+flywheel storage is built out of carbon fibre spinning at tens of thousands of rpm rather than
+out of heavier steel. Doubling my plate to 4&nbsp;kg would have doubled the stored energy;
+doubling the speed would have quadrupled it — and the machine would have run into a very
+different limit, since the burst hazard of a spinning disk scales with rim speed, not mass.</p>
+
+<div class="note key">
+  <span class="lbl">The reality check I could not do at fifteen</span>
+  <p>At 300&nbsp;rpm the flywheel holds about 4&nbsp;joules. A single AA alkaline cell holds
+  roughly 10&nbsp;000&nbsp;joules — two and a half <em>thousand</em> times more, at a fraction of
+  the mass and with no bearings to keep it. My machine was never going to be a battery. What it
+  was, and what it turned out to be worth, was a device that made an abstract chain —
+  potential energy → kinetic energy → magnetic flux change → EMF → light — visible and
+  measurable end to end, one link at a time.</p>
+</div>
+
+<!-- ═════════════════════════ 7. GEARBOX ═════════════════════ -->
+<h2><span class="n">7</span>Gearing: buying speed with torque</h2>
+
+<p>Since ε ∝ <span class="v">ω</span><sub>m</sub> and a comfortable hand crank runs at perhaps
+60–90&nbsp;rpm, the cheapest volts available were geometric. I designed a 4:1 planetary gearbox
+in CAD and printed it. In a planetary train with a fixed ring, sun input and carrier output, the
+reduction is</p>
+
+<div class="eq"><div class="body">
+  <span class="v">G</span> = 1 + <span class="frac"><span><span class="v">Z</span><sub>ring</sub></span><span class="den"><span class="v">Z</span><sub>sun</sub></span></span>
+</div><div class="num">(14)</div></div>
+
+<p>so a ring with three times the teeth of the sun gives 4:1. Driven the other way — crank on the
+carrier, generator on the sun — the same train becomes a 4× <em>speed increaser</em>, which is
+how I used it. The bargain is strictly conserved:</p>
+
+<div class="eq"><div class="body">
+  <span class="v">ω</span><sub>out</sub> = <span class="v">G</span> <span class="v">ω</span><sub>in</sub>,
+  &nbsp;&nbsp;
+  <span class="v">τ</span><sub>out</sub> = <span class="frac"><span><span class="v">η</span> <span class="v">τ</span><sub>in</sub></span><span class="den"><span class="v">G</span></span></span>,
+  &nbsp;&nbsp;
+  <span class="v">P</span><sub>out</sub> = <span class="v">η</span> <span class="v">P</span><sub>in</sub>
+</div><div class="num">(15)</div></div>
+
+<p>Four times the voltage, one quarter of the torque available to make current with, and whatever
+the printed plastic teeth lose to friction on top. Combining with (12), the torque I had to
+supply at the crank against the electrical load goes as <span class="v">G</span><sup>2</sup>: the
+gearbox raises <span class="v">ω</span> at the generator, which raises both the induced current
+and the arm through which it acts. The crank got noticeably heavier once the ratio went in, and
+that heaviness was, correctly, the feeling of delivering more power.</p>
+
+<!-- ═════════════════════════ 8. EXPERIMENT ══════════════════ -->
+<h2><span class="n">8</span>The gravity-drop experiment</h2>
+
+<p>The last thing I added was the best idea in the project, though I did not think of it that way
+at the time. A hand crank is not a measurement: nobody can turn a handle at a repeatable speed,
+and there is no way to say how much energy you put in. So I printed a spool, wound a string on
+it, hung a 200&nbsp;g mass from it and dropped it from 1&nbsp;m. That is a known, repeatable
+energy input, delivered as a constant torque:</p>
+
+<div class="eq"><div class="body">
+  <span class="v">E</span><sub>in</sub> = <span class="v">m g h</span> = 0.200 × 9.81 × 1.00 = 1.96 <span class="u">J</span>,
+  &nbsp;&nbsp;
+  <span class="v">τ</span><sub>in</sub> = <span class="v">m g r</span><sub>s</sub>,
+  &nbsp;&nbsp;
+  <span class="v">P</span><sub>in</sub>(<span class="v">t</span>) = <span class="v">m g v</span>(<span class="v">t</span>)
+</div><div class="num">(16)</div></div>
+
+<h3>What the video actually recorded</h3>
+
+<p>The multimeter is visible in frame throughout the drop, on its 20&nbsp;V range, reading the
+rectified output. Stepping the footage frame by frame gives a genuine time series — the only
+quantitative data this project ever produced:</p>
+
+<figure>
+<svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Measured output voltage against time during the drop">
+  <!-- y = 190 - 36*V   x = 60 + 300*t -->
+  <g stroke="#e8eaee" stroke-width="1">
+    <path d="M60 154 L520 154 M60 118 L520 118 M60 82 L520 82 M60 46 L520 46"/>
+  </g>
+  <g stroke="#16181d" stroke-width="1.4" fill="none">
+    <path d="M60 190 L520 190"/><path d="M60 20 L60 190"/>
+  </g>
+  <path d="M118 190 L473 33" stroke="#b98900" stroke-width="1.2" stroke-dasharray="5 4" fill="none"/>
+  <g fill="#b98900">
+    <circle cx="60"  cy="190" r="3.6"/>
+    <circle cx="98"  cy="190" r="3.6"/>
+    <circle cx="135" cy="180" r="3.6"/>
+    <circle cx="173" cy="180" r="3.6"/>
+    <circle cx="210" cy="180" r="3.6"/>
+    <circle cx="248" cy="158" r="3.6"/>
+    <circle cx="285" cy="103" r="3.6"/>
+    <circle cx="323" cy="103" r="3.6"/>
+    <circle cx="360" cy="103" r="3.6"/>
+    <circle cx="398" cy="24"  r="3.6"/>
+    <circle cx="435" cy="40"  r="3.6"/>
+    <circle cx="473" cy="40"  r="3.6"/>
+  </g>
+  <g font-family="Consolas,DejaVu Sans Mono,monospace" font-size="9" fill="#4a4f57">
+    <text x="52" y="194" text-anchor="end">0</text>
+    <text x="52" y="158" text-anchor="end">1</text>
+    <text x="52" y="122" text-anchor="end">2</text>
+    <text x="52" y="86"  text-anchor="end">3</text>
+    <text x="52" y="50"  text-anchor="end">4</text>
+    <text x="26" y="105" transform="rotate(-90 26 105)" text-anchor="middle" fill="#16181d">output / V</text>
+    <text x="60"  y="206" text-anchor="middle">0.0</text>
+    <text x="210" y="206" text-anchor="middle">0.5</text>
+    <text x="360" y="206" text-anchor="middle">1.0</text>
+    <text x="510" y="206" text-anchor="middle">1.5</text>
+    <text x="290" y="222" text-anchor="middle" fill="#16181d">time from release / s</text>
+    <text x="392" y="16"  fill="#b98900" text-anchor="middle">4.60 V</text>
+    <text x="150" y="56"  fill="#b98900" font-size="8.5">least-squares fit, 3.7 V/s</text>
+  </g>
+</svg>
+<figcaption><b>Figure 3 — Measured output during the drop, read off the meter frame by frame at
+8&nbsp;fps.</b> Readings: 0.00, 0.00, 0.28, 0.28, 0.28, 0.88, 2.42, 2.42, 2.42, 4.60, 4.17,
+4.17&nbsp;V. The staircase is the meter's own update rate (roughly 3&nbsp;Hz), not the machine.
+The dashed line is a least-squares fit to the twelve points: slope 3.7&nbsp;V/s, intercept
+−0.7&nbsp;V — that negative intercept is the meter's settling lag plus the slack taken up before
+the string began to pull.</figcaption>
+</figure>
+
+<p>Two conclusions come straight off that plot, and neither needed any assumption about the
+machine's construction.</p>
+
+<p><strong>The voltage rises linearly with time.</strong> Since ε = <span class="v">k</span>
+<span class="v">ω</span><sub>m</sub> and <span class="v">k</span> is a constant of the build, a
+straight line in voltage is a straight line in shaft speed: the rotor is under a very nearly
+constant angular acceleration for the whole 1.4&nbsp;s recorded. That is precisely what (16) plus
+a dominant inertia predicts, and it means the electrical braking of (12) was still small compared
+with the applied torque — the machine never reached its terminal speed during the drop. The
+falling mass was, in the strict sense, still accelerating when it hit the floor.</p>
+
+<p><strong>The gradient gives the machine constant, once the speed is known.</strong> The fitted slope
+is 3.7&nbsp;V/s. The spool is 25&nbsp;mm in diameter <span class="tag m">measured</span>, so the
+string leaves it at <span class="v">r</span><sub>s</sub> = 12.5&nbsp;mm, and the mass covers the
+drop in a few seconds, putting it near 0.5&nbsp;m/s <span class="tag">est.</span> at the point of
+the last reading — so <span class="v">ω</span><sub>m</sub> ≈
+<span class="v">v</span>/<span class="v">r</span><sub>s</sub> ≈ 40&nbsp;rad/s, about
+380&nbsp;rpm. Hence</p>
+
+<div class="eq"><div class="body">
+  <span class="v">k</span><sub>meas</sub> =
+  <span class="frac"><span>ε</span><span class="den"><span class="v">ω</span><sub>m</sub></span></span>
+  ≈ <span class="frac"><span>4.2</span><span class="den">40</span></span>
+  ≈ 0.10 <span class="u">V·s/rad</span>
+  &nbsp;&nbsp;(vs. <span class="v">k</span><sub>ideal</sub> ≈ 0.11 from 6b)
+</div><div class="num">(17)</div></div>
+
+<p>The string wraps in a layer of finite thickness, so the effective radius grows a little as the
+spool fills and shrinks as it pays out; at 12.5&nbsp;mm of radius a millimetre of winding is an
+8% error on <span class="v">ω</span>, which is small against the uncertainty in the fall speed
+itself.</p>
+
+<div class="note key">
+  <span class="lbl">The result</span>
+  <p>0.10 measured against 0.11 predicted. Those two numbers were arrived at along completely
+  separate routes — one from magnet dimensions, turn count and winding geometry, the other from a
+  falling mass, a spool radius and a voltmeter — and they agree. A machine assembled out of
+  plumbing pipe and hot glue by someone who had not yet met calculus behaved the way the textbook
+  says it should.</p>
+</div>
+
+<h3>How much that agreement is worth</h3>
+
+<p>Less than it looks, and it would be dishonest to bank it. The dominant uncertainty is the fall
+speed: ±30% on <span class="v">v</span> is ±30% on <span class="v">ω</span> and therefore on
+<span class="v">k</span><sub>meas</sub>, so the honest measured range is
+<strong>0.08–0.14&nbsp;V·s/rad</strong>. The prediction has its own slack — chiefly
+<span class="v">B</span><sub>gap</sub>, which I have taken as 0.15&nbsp;T for neodymium blocks
+either side of a coil a few millimetres thick, and which could defensibly be argued anywhere
+between 0.10 and 0.20&nbsp;T. What the comparison genuinely establishes is that the two are the
+same size — that no large effect is missing from the model — not that the model is accurate to
+10%.</p>
+
+<p>Three real effects sit inside that slack, all pushing the machine below its prediction:</p>
+
+<ul>
+  <li><strong>Not every turn links the full flux.</strong> Equation (6a) credits all 400 turns with
+      the flux through the mean turn. The innermost turns enclose less area than that, the
+      outermost enclose more but sit further from the pole; the mean is a fair approximation, not
+      an exact one.</li>
+  <li><strong>Alignment and phase.</strong> Four coils in series only add arithmetically if their
+      EMFs are in phase, which requires the coil spacing to match the pole spacing accurately.
+      Coils glued into a printed holder by a fifteen-year-old are not perfectly indexed, and any
+      phase error subtracts.</li>
+  <li><strong>The meter is not an oscilloscope.</strong> A cheap DMM after a bridge and a
+      smoothing capacitor reads somewhere between the average and the peak of a rectified
+      waveform. If it was reading closer to the average, the true peak EMF was nearer
+      4.2/0.64 ≈ 6.6&nbsp;V, and the honest statement is that peak EMF lay somewhere in
+      4.2–6.6&nbsp;V.</li>
+</ul>
+
+<p>That last point resolves what would otherwise be a contradiction. Equation (10) says the blue
+LEDs need 4.4&nbsp;V to light at all — about 44&nbsp;rad/s, or 420&nbsp;rpm, by equation (11) —
+and the meter never showed more than 4.60&nbsp;V, yet the LEDs are clearly lit in the footage well
+before the end of the drop. A rectified waveform whose <em>peak</em> is around 6.6&nbsp;V while its
+average reads 4.2&nbsp;V explains both observations at once, and it is also why the crank and its
+4:1 gearbox — not the falling mass — were the reliable way to light the thing.</p>
+
+<h3>Efficiency, to the nearest order of magnitude</h3>
+
+<p>Three blue LEDs drawing on the order of 5&nbsp;mA at 3&nbsp;V for the few seconds of the drop
+amount to roughly 0.2&nbsp;J out of the 1.96&nbsp;J that went in — an efficiency in the region of
+<strong>10%</strong> <span class="tag">est.</span>. The lost 90% is not mysterious, and can be
+named in order of size:</p>
+
+<ul>
+  <li><strong>Kinetic energy never converted.</strong> The rotor is still spinning when the mass
+      lands. Everything left in <span class="v">I</span><span class="v">ω</span><sup>2</sup>/2 at
+      that instant never became light. Against a slowly-accelerating rotor this is easily the
+      largest single term.</li>
+  <li><strong>Rectifier drops.</strong> Two diodes at ~0.7&nbsp;V in series with a ~3&nbsp;V load
+      is roughly a third of the delivered voltage burned as heat before the LEDs see it.</li>
+  <li><strong>Copper loss.</strong> 31&nbsp;Ω of source resistance against an LED load that is
+      not remotely matched to it — equation (9) says this transfer is far off its optimum.</li>
+  <li><strong>Bearing friction and string losses.</strong> Small, but not zero, and the only ones
+      I could actually feel.</li>
+</ul>
+
+<!-- ═════════════════════════ 9. FAILURE ═════════════════════ -->
+<h2><span class="n">9</span>Post-mortem: why the first prototype imploded</h2>
+
+<p>The first version, six months earlier, was cut from expanded polystyrene with a craft knife.
+Two magnet disks faced each other across a gap, exactly as in Figure&nbsp;1, and after a handful
+of runs it destroyed itself: the disks pulled together and the webs between the magnet pockets
+folded inward. It never lit anything. I understood at the time that the magnets had done it. I did
+not understand that it was predictable with a single equation.</p>
+
+<p>Two magnetised surfaces facing each other across a small gap attract with a force given by the
+Maxwell stress on the pole face:</p>
+
+<div class="eq"><div class="body">
+  <span class="v">F</span> =
+  <span class="frac"><span><span class="v">B</span><sup>2</sup><span class="v">A</span></span><span class="den">2<span class="v">μ</span><sub>0</sub></span></span>
+  , &nbsp;&nbsp; <span class="v">μ</span><sub>0</sub> = 4π × 10<sup>−7</sup> <span class="u">H/m</span>
+</div><div class="num">(18)</div></div>
+
+<p>The <em>square</em> in the numerator is the whole story. Per opposed pair of 20 × 10&nbsp;mm
+magnets, at a pole-face field of 0.3&nbsp;T <span class="tag">est.</span>:</p>
+
+<div class="eq"><div class="body">
+  <span class="v">F</span><sub>pair</sub> =
+  <span class="frac"><span>(0.3)<sup>2</sup> × 2×10<sup>−4</sup></span><span class="den">2 × 4π×10<sup>−7</sup></span></span>
+  ≈ 7.2 <span class="u">N</span>
+  &nbsp;&nbsp;⟹&nbsp;&nbsp;
+  <span class="v">F</span><sub>total</sub> ≈ 8 × 7.2 ≈ 57 <span class="u">N</span> ≈ 5.8 <span class="u">kgf</span>
+</div><div class="num">(19)</div></div>
+
+<table>
+  <tr><th>Pole-face field</th><th>Force per pair</th><th>Eight pairs</th><th>In familiar terms</th></tr>
+  <tr><td class="val">0.25 T</td><td class="val">5.0 N</td><td class="val">40 N</td><td>4 kg hanging off the disks</td></tr>
+  <tr><td class="val">0.30 T</td><td class="val">7.2 N</td><td class="val">57 N</td><td>6 kg</td></tr>
+  <tr><td class="val">0.35 T</td><td class="val">9.7 N</td><td class="val">78 N</td><td>8 kg</td></tr>
+</table>
+
+<p>Six kilograms of axial pull, applied to a disk of expanded polystyrene about 100&nbsp;mm across
+with eight rectangular holes cut through it. Two separate things then go wrong, and the second is
+the one that makes the failure sudden rather than gradual.</p>
+
+<h3>The material was asked the wrong question</h3>
+
+<p>Spread over the magnet faces, 7.2&nbsp;N on 200&nbsp;mm<sup>2</sup> is a bearing stress of
+about 36&nbsp;kPa — comfortably under the ~100–150&nbsp;kPa compressive strength of EPS foam, so a
+naive check passes. But the disk was never in pure compression. The load arrives at eight
+discrete pockets near the rim and has to travel through the slender webs between them to reach
+the hub. Those webs are loaded in <em>bending</em>, and a foam plate with eight holes punched
+around its circumference has almost no bending stiffness left where it matters. Failure came at a
+fraction of the stress a compression check would have predicted.</p>
+
+<h3>The instability: the force grows as the gap closes</h3>
+
+<figure>
+<svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gap-closing instability">
+  <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+    <path d="M0,0 L7,3 L0,6 z" fill="#b98900"/></marker></defs>
+
+  <!-- panel 1: rigid, disks straight -->
+  <g fill="none" stroke="#16181d" stroke-width="3">
+    <path d="M120 40 L120 160"/><path d="M230 40 L230 160"/>
+  </g>
+  <g stroke="#b98900" stroke-width="1.8" marker-end="url(#ar2)">
+    <path d="M126 100 L166 100"/><path d="M224 100 L184 100"/>
+  </g>
+  <g stroke="#8a8f98" stroke-width="1" fill="none">
+    <path d="M120 172 L230 172"/><path d="M120 168 L120 176 M230 168 L230 176"/>
+  </g>
+
+  <!-- panel 2: compliant, disks bowed toward each other -->
+  <g fill="none" stroke="#c0392b" stroke-width="3">
+    <path d="M390 40 Q424 100 390 160"/><path d="M500 40 Q466 100 500 160"/>
+  </g>
+  <g stroke="#b98900" stroke-width="2.6" marker-end="url(#ar2)">
+    <path d="M400 100 L432 100"/><path d="M490 100 L458 100"/>
+  </g>
+  <g stroke="#8a8f98" stroke-width="1" fill="none">
+    <path d="M424 172 L466 172"/><path d="M424 168 L424 176 M466 168 L466 176"/>
+  </g>
+
+  <path d="M280 100 L330 100" stroke="#b98900" stroke-width="1.8" marker-end="url(#ar2)" fill="none"/>
+
+  <g font-family="Consolas,DejaVu Sans Mono,monospace" font-size="9.5" fill="#16181d">
+    <text x="175" y="192" text-anchor="middle">gap g</text>
+    <text x="445" y="192" text-anchor="middle">gap &lt; g</text>
+    <text x="175" y="26"  text-anchor="middle" font-size="8.5" fill="#4a4f57">stiff rotor: F balanced, gap holds</text>
+    <text x="445" y="26"  text-anchor="middle" font-size="8.5" fill="#c0392b">compliant rotor: F ∝ B(g)² grows</text>
+    <text x="305" y="88"  text-anchor="middle" font-size="8" fill="#4a4f57">deflect</text>
+  </g>
+</svg>
+<figcaption><b>Figure 4 — Positive feedback in a compliant rotor.</b> The disks deflect toward
+each other; the smaller gap raises the field, which raises the force by its square, which deflects
+them further. Past a critical stiffness there is no equilibrium to settle at, and the structure
+snaps through rather than sagging.</figcaption>
+</figure>
+
+<p>Field strength between the disks rises steeply as the gap closes, and force goes as the square
+of the field. So a small elastic deflection increases the load that caused it. Writing the
+structure as a linear spring of stiffness <span class="v">k</span><sub>s</sub> against a load that
+grows as the gap shrinks, equilibrium requires</p>
+
+<div class="eq"><div class="body">
+  <span class="v">k</span><sub>s</sub> &gt;
+  <span class="frac"><span>d<span class="v">F</span></span><span class="den">d<span class="v">g</span></span></span>
+  &nbsp;&nbsp; at the operating gap
+</div><div class="num">(20)</div></div>
+
+<p>Below that stiffness there is no stable gap: the rotor closes on itself. This is the same
+snap-through instability that makes electrostatic MEMS actuators "pull in", and it is why the
+polystyrene version did not sag slowly and then get fixed — it went from working badly to
+destroyed in one attempt.</p>
+
+<div class="note key">
+  <span class="lbl">What the fix actually was</span>
+  <p>Version two changed the material and nothing else about the concept: PLA at roughly a
+  thousand times the elastic modulus of EPS foam, printed disks with the magnets in closed
+  pockets, a copper-pipe shaft carried in real ball bearings, and a PVC frame that held both
+  rotors at a fixed spacing whatever the magnets wanted. The 57&nbsp;N did not go away — it was
+  simply given a load path stiff enough that condition (20) was never in doubt. That is the whole
+  difference between the two builds, and it is a materials-selection problem, not a magnetics one.
+  Six months of frustration, one equation.</p>
+</div>
+
+<!-- ═════════════════════════ 10. NEXT ═══════════════════════ -->
+<h2><span class="n">10</span>What I would measure if I built it again</h2>
+
+<p>The largest uncertainty in this document is speed. The spool radius is known, but the fall
+velocity behind equation (17) is still counted off video frames by eye, and
+<span class="v">ω</span> is directly proportional to it — so
+<span class="v">k</span><sub>meas</sub> is only as good as a hand-timed drop. In order of how
+much each would sharpen the analysis:</p>
+
+<ul>
+  <li><strong>An actual tachometer.</strong> An IR reflective sensor and one white mark on the
+      rotor turns every voltage reading into a point on a
+      <span class="v">k</span> = ε/<span class="v">ω</span> line, and the slope of that line is the
+      machine constant with no geometry assumed at all. I built a mount for exactly this and
+      never finished the instrumentation.</li>
+  <li><strong>A known load resistor instead of LEDs.</strong> A resistor of known value makes
+      power directly computable as <span class="v">V</span><sup>2</sup>/<span class="v">R</span>,
+      and sweeping <span class="v">R</span><sub>L</sub> maps out equation (9) experimentally —
+      the maximum-power point is a thing you can see on a bench.</li>
+  <li><strong>An oscilloscope across one coil, before the bridge.</strong> This removes the meter
+      ambiguity of §8 permanently: peak, RMS, waveform shape and electrical frequency all become
+      directly readable, and <span class="v">f</span> gives the shaft speed for free through
+      equation (4) — a tachometer built out of the generator itself.</li>
+  <li><strong>Coast-down testing.</strong> Spin the flywheel up, disconnect the load, record the
+      decay: that separates bearing and windage losses from electrical ones, which is the only way
+      to close the energy budget of §8 honestly.</li>
+</ul>
+
+<!-- ═════════════════════════ APPENDIX ═══════════════════════ -->
+<h2><span class="n">A</span>Symbols, values and where they came from</h2>
+
+<table>
+  <tr><th>Symbol</th><th>Quantity</th><th>Value used</th><th>Provenance</th></tr>
+  <tr><td class="sym">N</td><td>Turns per coil</td><td class="val">≈ 400</td><td>from the winding window, eq. (8a)</td></tr>
+  <tr><td class="sym">—</td><td>Winding window</td><td class="val">5 × 6 mm</td><td>the printed holder <span class="tag m">measured</span></td></tr>
+  <tr><td class="sym">d<sub>ins</sub></td><td>Wire OD over enamel</td><td class="val">0.25 mm</td><td>builder's record <span class="tag m">measured</span></td></tr>
+  <tr><td class="sym">D<sub>mean</sub></td><td>Mean turn diameter</td><td class="val">12 mm</td><td>6 mm former + 6 mm build</td></tr>
+  <tr><td class="sym">—</td><td>Coils, in series</td><td class="val">4</td><td>photographs <span class="tag m">measured</span></td></tr>
+  <tr><td class="sym">—</td><td>Wire gauge</td><td class="val">AWG 32 (0.203 mm)</td><td>builder's record <span class="tag m">measured</span></td></tr>
+  <tr><td class="sym">p</td><td>Pole pairs</td><td class="val">4 (8 magnets/disk)</td><td>counted from photographs <span class="tag m">measured</span></td></tr>
+  <tr><td class="sym">A<sub>m</sub></td><td>Magnet pole face</td><td class="val">20 × 10 mm</td><td>scaled from photographs <span class="tag">est.</span></td></tr>
+  <tr><td class="sym">B<sub>gap</sub></td><td>Working-gap field</td><td class="val">≈ 0.15 T</td><td>neodymium blocks across the coil <span class="tag">est.</span></td></tr>
+  <tr><td class="sym">B<sub>face</sub></td><td>Pole-face field</td><td class="val">0.25 – 0.35 T</td><td>typical N35 block <span class="tag">est.</span></td></tr>
+  <tr><td class="sym">R<sub>coil</sub></td><td>Coil resistance</td><td class="val">≈ 7.8 Ω each</td><td>computed from (7)–(8b)</td></tr>
+  <tr><td class="sym">m</td><td>Flywheel plate</td><td class="val">2 kg (5 kg tested)</td><td>marked on the plate <span class="tag m">measured</span></td></tr>
+  <tr><td class="sym">r<sub>o</sub>, r<sub>i</sub></td><td>Plate radii</td><td class="val">90 mm, 12.5 mm</td><td>standard plate geometry <span class="tag">est.</span></td></tr>
+  <tr><td class="sym">I</td><td>Flywheel inertia</td><td class="val">8.3 × 10<sup>−3</sup> kg·m²</td><td>computed from (13)</td></tr>
+  <tr><td class="sym">G</td><td>Gearbox ratio</td><td class="val">4:1</td><td>CAD model <span class="tag m">measured</span></td></tr>
+  <tr><td class="sym">m<sub>d</sub>, h</td><td>Drop mass and height</td><td class="val">200 g, 1.00 m</td><td>the experiment <span class="tag m">measured</span></td></tr>
+  <tr><td class="sym">r<sub>s</sub></td><td>Spool radius</td><td class="val">12.5 mm (Ø 25 mm)</td><td>builder's record <span class="tag m">measured</span></td></tr>
+  <tr><td class="sym">v</td><td>Fall speed at last reading</td><td class="val">≈ 0.5 m/s</td><td>counted off video frames <span class="tag">est.</span></td></tr>
+  <tr><td class="sym">ε</td><td>Peak output, drop test</td><td class="val">4.60 V (meter)</td><td>read frame by frame <span class="tag m">measured</span></td></tr>
+  <tr><td class="sym">V<sub>f</sub></td><td>Blue LED / diode drop</td><td class="val">3.0 V / 0.7 V</td><td>standard device data</td></tr>
+  <tr><td class="sym">ρ<sub>Cu</sub></td><td>Copper resistivity</td><td class="val">1.68 × 10<sup>−8</sup> Ω·m</td><td>reference value</td></tr>
+  <tr><td class="sym">μ<sub>0</sub></td><td>Permeability of free space</td><td class="val">4π × 10<sup>−7</sup> H/m</td><td>defined constant</td></tr>
+</table>
+
+<p class="foot">Every number in this document that is not marked <span class="tag m">measured</span>
+is an estimate, and the estimates are deliberately conservative rather than flattering. The
+machine still exists, on a shelf in São Paulo; if it is ever put back on a bench with a
+tachometer and a load resistor, §8 and §10 are the pages to redo first.</p>
+
+</body>
+</html>
