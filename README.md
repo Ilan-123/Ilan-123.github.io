@@ -221,12 +221,12 @@ Change the spec (move a section, add a sub-tab, redesign the hero), then ask Cla
 
 ## 7. Publish changes (GitHub Pages)
 
-> **The repo is currently PRIVATE, so the live site is down.** A `<user>.github.io`
-> repo must be **public** for Pages to serve on the free plan. To bring it back:
-> Settings → General → Change visibility → public, then Settings → Pages and
-> re-select the source (`main` / root) — it doesn't always re-arm itself. The URL
-> stays the same. Toggling visibility is non-destructive: commits, history and
-> stars all survive.
+> **The repo is public and the site is live** at <https://ilan-123.github.io>. A
+> `<user>.github.io` repo must be public for Pages to serve on the free plan, so if you
+> ever flip it private the site goes down until you flip it back: Settings → General →
+> Change visibility → public, then Settings → Pages and re-select the source
+> (`main` / root), which doesn't always re-arm itself. The URL stays the same, and
+> toggling visibility is non-destructive: commits, history and stars all survive.
 
 The site deploys from the `main` branch of
 [`Ilan-123/Ilan-123.github.io`](https://github.com/Ilan-123/Ilan-123.github.io).
@@ -263,10 +263,10 @@ URL to see it. Notes:
 
 ### Publishing work-related material
 
-Anything pushed while the repo is public is effectively permanent — making it private
-afterwards doesn't retract what was already served, cloned or crawled, and the file
-stays in git history regardless. Flip to private *before* pushing if you want a review
-window.
+The repo is public, so **a push is a publication**. It is effectively permanent — making
+the repo private afterwards doesn't retract what was already served, cloned or crawled,
+and the file stays in git history regardless. Review before you push, not after; if you
+want a proper review window, flip to private *first*.
 
 For Timpel material specifically, keep out of anything committed: internal document
 codes, device wire protocols (opcodes, frame layouts, port schemes), transport
@@ -364,7 +364,7 @@ asset tag, or a patient identifier inside a screenshot.
 - [x] Add your **GitHub URL** to `js/config.js` (`github:`).
 - [x] Portrait photo → `assets/images/portrait.jpg`.
 - [ ] Resize `assets/images/portrait.jpg` — it's **6.8 MB**, several times the weight
-      of everything else on the site combined. ~1200 px wide at JPEG q82 would be
-      well under 300 KB.
+      of everything else on the site combined. The one-line ffmpeg recipe in §3.4 brings
+      it well under 300 KB.
 - [ ] Review the Duke AERO project entry (drafted from the resume) and add photos.
-- [ ] Decide whether the repo goes back to public (see §7).
+- [x] Repo is public and Pages is serving at <https://ilan-123.github.io>.
