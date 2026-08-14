@@ -7,12 +7,11 @@ var SITE = {
   // ── Identity ────────────────────────────────────────────────
   name: "Ilan Jordan",
   shortName: "Ilan Jordan",              // shown next to the logo
-  role: "MechE & Materials Science · Physics · Duke ’29",
+  role: "Mechanical Engineering & Materials Science · Physics · Duke ’29",
   tagline: "Designing thermal & electromagnetic systems for the energy of the future.",
 
   // ── Hero: telemetry spec strip (mono readout under the buttons) ─
   heroSpecs: [
-    "BASED · DURHAM, NC",
     "STATUS · OPEN TO OPPORTUNITIES",
   ],
 
