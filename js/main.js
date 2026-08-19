@@ -321,7 +321,7 @@
   /* ── about ───────────────────────────────────── */
   (function renderAbout() {
     var img = new Image();
-    img.src = "assets/images/portrait.jpg";
+    img.src = "assets/images/portrait.jpg?v=26";
     img.alt = "Portrait of " + SITE.name;
     img.onerror = function () {
       $("portrait").innerHTML = '<p class="ph-note">Drop your photo at<br>assets/images/portrait.jpg</p>';

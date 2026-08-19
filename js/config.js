@@ -42,10 +42,13 @@ var SITE = {
 
   // ── About: bio paragraphs ───────────────────────────────────
   aboutParagraphs: [
-    "I'm Ilan Jordan — a Mechanical Engineering & Materials Science and Physics student at Duke University (Class of 2029), originally from São Paulo, Brazil. I want to build the machines that make clean energy abundant, and fusion is the problem I keep coming back to: it sits exactly where my interests meet — thermal systems, electromagnetics, and the fluid dynamics that tie them together.",
-    "At Duke, I'm on the liquid propulsion team of Duke AERO, developing CAD models and Ansys fluid simulations to optimize an experimental rocket engine's combustion and cooling as the team pushes toward 50,000 feet, and I work on photosensitive-detector data in the Duke Physics Neutrino Lab. Off campus, I'm a Development Specialist at Timpel Medical, where I led development of EITSIM Studio — a real-time simulator that reproduces a ventilated ICU patient in software to drive and verify Electrical Impedance Tomography devices, replacing live-animal testing in the verification loop.",
-    "Outside of class, I build things for the joy of it — an RC airplane, an electrical generator, and whatever comes next — and I teach: I've taught Python to students in Paraisópolis and led review sessions for hundreds of physics and calculus students.",
+    "I'm drawn to physics for what it makes possible. The distance between a principle understood in a lab and a technology that changes how people live is where the interesting engineering happens, and it's where I want to spend my career.",
+    "I'm a sophomore at Duke studying Mechanical Engineering & Materials Science alongside Physics — a combination I chose because the problems I care about don't respect the boundary between them. Understanding why a system behaves the way it does and building something that survives contact with the real world are the same task approached from two directions.",
+    "Energy is what pulls at me most. I grew up in Brazil, where blackouts are ordinary enough that you plan around them, so reliable power has never been an abstraction to me. Fusion is the version of that problem I find hardest to look away from — plasma physics, materials under conditions nothing was designed for, control problems that are still open. I'm also interested in machine learning applied to physical systems, for control and prediction in regimes where first-principles simulation is too slow or too incomplete on its own.",
+    "I'm looking for research and internship work on problems that matter beyond the lab, alongside people further along than I am.",
   ],
+
+
 
   // ── About: skills, grouped ──────────────────────────────────
   skills: [
@@ -58,7 +61,7 @@ var SITE = {
 
   // ── About: timeline (newest first) ──────────────────────────
   timeline: [
-    { period: "May 2026 — present", title: "Development Specialist I", org: "Timpel Medical",
+    { period: "May — Aug 2026", title: "Development Specialist I (Internship)", org: "Timpel Medical",
       blurb: "Led development of EITSIM Studio, a real-time Electrical Impedance Tomography simulator that reproduces a ventilated ICU patient in software — Python (PySide6, PyQtGraph) over a C++ physics engine, with hardware-in-the-loop control from a real ICU ventilator and an emulated acquisition module that drives a live clinical monitor without a physical phantom." },
     { period: "Mar 2026 — present", title: "Research Assistant, Neutrino Lab", org: "Duke Physics",
       blurb: "Working with field specialists on photosensitive-detector data for cosmic particles." },

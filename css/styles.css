@@ -26,9 +26,9 @@
   --nav-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 
   /* ── Type & shape (shared by both themes) ────── */
-  --font-body: "Architects Daughter", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
-  --font-mono: "Architects Daughter", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
-  --display-stretch: 100%;  /* no-op on the handwriting font, kept for compat */
+  --font-body: "Archivo", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, "Liberation Mono", monospace;
+  --display-stretch: 108%;  /* Archivo carries a width axis; display type runs slightly expanded */
   --radius: 6px;
   /* hand-ruled box — slightly different radii each corner */
   --wonky: 255px 15px 225px 15px / 15px 225px 15px 255px;

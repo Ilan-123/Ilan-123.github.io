@@ -188,9 +188,9 @@ handwritten labels. The four scroll-story schematics get a pencil-wobble SVG fil
 magenta outline, dark `#070b14` field) in dark mode and the original Blueprint values
 in light mode — scoped inside `.hero` in `css/styles.css`. Only its typeface changed.
 
-Type (Google Fonts): **Architects Daughter** everywhere — a hand-lettered face drawn
-from an architect's handwriting; it replaces both Archivo and IBM Plex Mono (the
-`--font-body` / `--font-mono` tokens both point to it). Hero last name + one
+Type (Google Fonts): **Archivo** for body and display (`--font-body`; variable
+weight and width, so `--display-stretch` drives the title width axis) and
+**JetBrains Mono** for labels, readouts and specs (`--font-mono`). Hero last name + one
 contact-heading word (config: `contactHeadingAccent`) still render as **hollow
 accent-colored outline strokes**.
 
@@ -239,8 +239,8 @@ accent-colored outline strokes**.
 - [x] Home scroll story: 4 pinned scenes scrubbed by scroll (js/scenes.js), equations
       as in-figure margin notes, per-scene HUD readouts, reduced-motion static frames,
       single-column stack on mobile
-- [x] Hand-drawn sketch language site-wide: Architects Daughter type, wonky borders,
-      wavy title underlines, pencil-wobble filter on story schematics
+- [x] Hand-drawn sketch language site-wide: wonky borders, wavy title underlines,
+      pencil-wobble filter on story schematics (type is Archivo / JetBrains Mono)
 
 ## 7. Open items
 
