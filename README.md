@@ -360,7 +360,7 @@ asset tag, or a patient identifier inside a screenshot.
       write the entry.)
 - [x] **Electrical generator** — full entry with 7 figures, 4 clips, the five Tinkercad
       models and the Physics Teardown PDF.
-- [x] **Timpel / EITSIM Studio** — full entry with 8 figures, 3 videos and the
+- [x] **Timpel / EITSIM Studio** — full entry with 10 figures, 4 videos and the
       Technical Overview PDF.
 - [x] **EGR 101 paintbrush cleaner** — written entry with final-poster results,
       client-approved cleaning tests, seven source documents, and Onshape/Trello

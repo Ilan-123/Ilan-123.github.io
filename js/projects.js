@@ -187,7 +187,7 @@ var PROJECTS = [
       {
         heading: "Rebuilding the tool",
         body: [
-          "The simulator already existed as a legacy C++ tool: correct physics behind a wall of tabs and bare plots (figs. 2, 4). I kept the validated numerical core and replaced everything above it with a Python application that reads like the bedside monitors clinicians already use (figs. 3, 5) — live waveform scopes, a permanent panel of respiratory numbers, and seven views spanning ventilation, per-region behaviour (figs. 6, 7), clinical maneuvers (fig. 10) and hardware setup (fig. 8).",
+          "The simulator already existed as a legacy C++ tool: correct physics behind a wall of tabs and bare plots (figs. 2, 4). I kept the validated numerical core and replaced everything above it with a Python application that reads like the bedside monitors clinicians already use (figs. 3, 5) — live waveform scopes, a permanent panel of respiratory numbers, and seven views spanning ventilation, per-region behaviour (figs. 6, 7), clinical maneuvers (fig. 10) and hardware setup (fig. 8). Video 1 shows the app running on the bench, from live respiratory waveforms to interactive regional analysis.",
           "It also gained what the legacy tool had no path to: every hardware link that follows, and the instrumentation a bench session runs on — freeze-and-crosshair cursors that snap to the nearest stored sample across all eight scopes at once, a severity-tagged event log fed by edge-detected state changes, a 50 Hz CSV recorder keyed to C6 breath numbers for cross-device alignment, and an app-wide manual mode that swaps Qt’s tooltips for a hover overlay covering every control.",
         ],
       },
@@ -205,14 +205,14 @@ var PROJECTS = [
       {
         heading: "Talking to real hardware",
         body: [
-          "Four device connections run out of the application (fig. 8): three carry the simulated patient outward to EIT hardware, and the fourth runs inward — the one I like most. A real Hamilton C6 ICU ventilator, breathing into a mechanical test lung on the bench (video 2), streams live pressure and flow into the simulator and takes over from the software ventilator (fig. 9, video 3). The modelled lung then responds to a real machine, and the interface locks out its own controls to make the handover obvious.",
+          "Four device connections run out of the application (fig. 8): three carry the simulated patient outward to EIT hardware, and the fourth runs inward — the one I like most. A real Hamilton C6 ICU ventilator, breathing into a mechanical test lung on the bench (video 3), streams live pressure and flow into the simulator and takes over from the software ventilator (fig. 9, video 4). The modelled lung then responds to a real machine, and the interface locks out its own controls to make the handover obvious.",
           "That meant implementing the ventilator’s serial protocol from its specification, and handling the ways real benches differ from ideal ones: wiring, unreliable adapters, a status flag that cannot be trusted. Link quality is watched continuously, and a run that drops too many packets is marked invalid rather than quietly believed.",
         ],
       },
       {
         heading: "Driving a real monitor",
         body: [
-          "The headline capability. The simulator impersonates the acquisition hardware inside an EIT system, so a real, unmodified clinical monitor runs its own image reconstruction and displays live regional lung imagery generated entirely from simulated physics (fig. 1, video 1) — no patient, no physical phantom.",
+          "The headline capability. The simulator impersonates the acquisition hardware inside an EIT system, so a real, unmodified clinical monitor runs its own image reconstruction and displays live regional lung imagery generated entirely from simulated physics (fig. 1, video 2) — no patient, no physical phantom.",
           "This rests on applied linear algebra: a sensitivity matrix relates changes in lung conductivity to the voltages the monitor expects. I reduced it from the many thousands of elements of a finite-element model to four anatomical lung regions — small enough to evaluate every frame, detailed enough that the monitor still draws a genuinely regional image rather than a uniform pulse. On the bench, a real monitor passed its full start-up sequence and imaged the simulated lung.",
         ],
       },
@@ -242,15 +242,18 @@ var PROJECTS = [
         caption: "Fig. 10 — Clinical maneuvers: pressure ramps and a simulated saline bolus." },
     ],
     video: [
+      { file: "assets/video/eitsim-app-in-action.mp4",
+        poster: "assets/images/eitsim-app-in-action-poster.jpg",
+        caption: "Video 1 — EITSIM Studio in action: live volume, flow, and pressure waveforms, followed by interactive regional analysis. Excerpts from a bench session." },
       { file: "assets/video/eitsim-enlight-live.mp4",
         poster: "assets/images/eitsim-video-poster.jpg",
-        caption: "Video 1 — Live EIT imagery on the clinical monitor, breathing in step with the simulated lung." },
+        caption: "Video 2 — Live EIT imagery on the clinical monitor, breathing in step with the simulated lung." },
       { file: "assets/video/eitsim-test-lung.mp4",
         poster: "assets/images/eitsim-test-lung-poster.jpg",
-        caption: "Video 2 — The bench: a mechanical test lung on the Hamilton C6 circuit." },
+        caption: "Video 3 — The bench: a mechanical test lung on the Hamilton C6 circuit." },
       { file: "assets/video/eitsim-c6-bench.mp4",
         poster: "assets/images/eitsim-c6-bench-poster.jpg",
-        caption: "Video 3 — Setting modes and pressures on the real ventilator; the simulated lung follows them live." },
+        caption: "Video 4 — Setting modes and pressures on the real ventilator; the simulated lung follows them live." },
     ],
     docs: [
       { name: "EITSIM Studio — Technical Overview (41 pp, abridged)",
