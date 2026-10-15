@@ -362,6 +362,10 @@ asset tag, or a patient identifier inside a screenshot.
       models and the Physics Teardown PDF.
 - [x] **Timpel / EITSIM Studio** — full entry with 8 figures, 3 videos and the
       Technical Overview PDF.
+- [x] **EGR 101 paintbrush cleaner** — written entry with final-poster results,
+      client-approved cleaning tests, seven source documents, and Onshape/Trello
+      links. Media: 10 captioned photos and 2 mechanism-test clips, with the clean
+      November 25 assembly photo as the project cover.
 - [x] Add your **GitHub URL** to `js/config.js` (`github:`).
 - [x] Portrait photo → `assets/images/portrait.jpg`.
 - [x] Resize `assets/images/portrait.jpg` — was 6.8 MB, now 57 KB. Cropped to the

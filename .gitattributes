@@ -1,6 +1,8 @@
 # core.autocrlf is on for this machine; without these, git would rewrite line
 # endings inside binaries and corrupt them on checkout.
 *.pdf  binary
+*.docx binary
+*.xlsx binary
 *.mp4  binary
 *.jpg  binary
 *.jpeg binary
